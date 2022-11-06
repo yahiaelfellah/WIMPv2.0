@@ -5,8 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const IdentityRouter = require('./routes/routes.config');
 const SecurityRouter = require('./security/routes.config');
-const config = require("./security/env.config")
-
+const  { setupLogging } = require("./utils/logging");
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin','*' );
@@ -22,6 +21,9 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
+/// setting up loggin 
+setupLogging(app);
+
 IdentityRouter.routesConfig(app);
 SecurityRouter.routesConfig(app);
 app.listen(3001,() =>{

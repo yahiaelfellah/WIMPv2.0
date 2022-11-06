@@ -13,7 +13,7 @@ exports.routesConfig = function (app) {
         Authenticator.login
     ]);
 
-    app.post('/auth/refresh', [
+    app.post('/refresh', [
         IdentityChecker.isUserStillExistsWithSamePrivileges,
         Authenticator.refresh_token
     ]);

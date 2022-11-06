@@ -61,6 +61,7 @@ exports.setupAuthentication = (app, routes) => {
           ? [validJWTNeeded, minimumPermissionLevelRequired(Surfer)]
           : [validJWTNeeded, verifyRefreshBodyField, validRefreshNeeded],
         function (req, res, next) {
+          console.log("AUTHORIZATION");
           next();
         }
       );

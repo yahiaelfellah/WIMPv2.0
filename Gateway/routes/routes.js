@@ -15,19 +15,21 @@ exports.routes = [
         }
     },
     {
-        url:`/${API_PREFIX}/auth/refresh`,
+        url:`/${API_PREFIX}/refresh`,
         auth:true,
         refresh: true,
+        bodyParser:true,
         creditCheck : true, 
         rateLimit:{
             windowsMs : 15*60*1000,
             max : 5
         },
         proxy: {
-            target:"http://localhost:3001/auth/refresh",
+            target:"http://localhost:3001/refresh",
             changeOrigin : true,
+            timeout: 3000,
             pathRewrite: {
-                [`^/${API_PREFIX}/auth/refresh`]: '',
+                [`^/${API_PREFIX}/refresh`]: '',
             },
         }
     },

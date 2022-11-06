@@ -1,5 +1,4 @@
 module.exports = {
-    "port": 8443,
     "refresh_secret": "Oh!42My@Go6*d9753!",
     "jwtValidityTimeInSeconds": 4080,
     "permissionLevels": {

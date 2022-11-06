@@ -5,9 +5,10 @@ const { setupAuth,setupAuthentication } = require("./security/index.security")
 const { routes } = require("./routes/routes");
 const { setupRateLimit } = require('./utils/rateLimit');
 var bodyParser = require('body-parser');
+const { setupBodyParser } = require("./utils/bodyparser");
 
 const app = express()
-const port = 3000; 
+const PORT = process.env.PORT || 3000;
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin','*' );
@@ -22,16 +23,16 @@ app.use(function (req, res, next) {
     }
 });
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // Setting up the logging
 setupLogging(app);
+// Setting up the bodyParser for the specific endpoint
+setupBodyParser(app,routes);
 // Setting up the Authentication for the gateway
 setupAuthentication(app,routes);
 // Setting up the rate Limit for the gateway
 setupRateLimit(app,routes);
 // Setting up the Proxy
 setupProxies(app,routes);
-app.listen(port ,()=> {
+app.listen(PORT ,()=> {
     console.log("Gateway running on port :3000");
 })

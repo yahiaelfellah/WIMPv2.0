@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken'),
-    refreshSecret = require('../env.config.js').actualRefreshSecret,
     crypto = require('crypto');
+const refresh_secret = require('../env.config.js').refresh_secret;
 const fs = require('fs');
-const cert = fs.readFileSync( './security/tls/token-public-key.pem');
+const cert = fs.readFileSync( './security/tls/token-public-key.pem',{encoding:'utf-8'});
 exports.validJWTNeeded = (req, res, next) => {
     if (req.headers['authorization']) {
         try {
@@ -35,9 +35,9 @@ exports.verifyRefreshBodyField = (req, res, next) => {
 exports.validRefreshNeeded = (req, res, next) => {
     let decoded = req.body.refreshToken.split('$');
     let salt = decoded[0];
-    console.log(req.body)
     let refreshToken = decoded[1];
-    let hash = crypto.createHmac('sha512', salt).update(req.jwt.userId + refreshSecret + req.jwt.jti).digest("base64");
+    let refreshId = req.jwt.userId + refresh_secret + req.jwt.jti;
+    let hash = crypto.createHmac('sha512', salt).update(refreshId).digest("base64");
     if (hash === refreshToken) {
         req.body = req.jwt;
         return next();

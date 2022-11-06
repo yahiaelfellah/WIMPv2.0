@@ -3,8 +3,15 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const DevicesRouter = require('./routes/routes.config');
+//const DevicesRouter = require('./routes/routes.config');
 
+
+// const WeMoNG = require('./lib/wemo.js');
+// var wemo = new WeMoNG();
+// //this won't work as there is no way to stop it...
+// //but is that a problem?
+// var interval = setInterval(wemo.start.bind(wemo), 60000);
+// wemo.start();
 /**
  * CORS
  */

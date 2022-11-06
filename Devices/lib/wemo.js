@@ -164,7 +164,7 @@ function addInsightParams(insightParms, msg) {
 util.inherits(WeMoNG, events.EventEmitter);
 
 WeMoNG.prototype.start = function start() {
-  //console.log("searching");
+  console.log("searching");
   var _wemo = this;
   _wemo.setMaxListeners(0);
   _wemo._client = new Client({'explicitSocketBind': true});
@@ -273,7 +273,7 @@ WeMoNG.prototype.start = function start() {
 
               post_request.on('error', function(err){
                 // should log err
-                //console.log(err);
+                console.log(err);
               })
 
               post_request.write(util.format(getenddevs.body, udn));
@@ -311,7 +311,7 @@ WeMoNG.prototype.start = function start() {
               }
             } else {
               //other stuff
-              //console.log( device.ip + ' -' + device.deviceType);
+              console.log( device.ip + ' -' + device.deviceType);
             }
           } else {
             console.error("failed to parse respose from " + location.href);
@@ -326,8 +326,9 @@ WeMoNG.prototype.start = function start() {
     });
   });
   _wemo._client.search(urn);
+  console.log("searching");
   setTimeout(function(){
-    //console.log("stopping");
+    console.log("stopping");
     _wemo._client._stop();
     //console.log("%j", devices);
   }, 10000);
