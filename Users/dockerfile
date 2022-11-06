@@ -1,0 +1,5 @@
+From node
+Add . /
+RUN npm install --ignore-scripts 
+CMD npm run index.js
+EXPOSE 3001

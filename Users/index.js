@@ -7,6 +7,8 @@ const IdentityRouter = require('./routes/routes.config');
 const SecurityRouter = require('./security/routes.config');
 const  { setupLogging } = require("./utils/logging");
 
+const PORT = process.env.PORT || 3001;
+
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin','*' );
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -26,7 +28,7 @@ setupLogging(app);
 
 IdentityRouter.routesConfig(app);
 SecurityRouter.routesConfig(app);
-app.listen(3001,() =>{
+app.listen(PORT,() =>{
     console.log("user service is running");
 });
 app.on('error',(error) => {
