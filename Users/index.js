@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const IdentityRouter = require('./routes/routes.config');
 const SecurityRouter = require('./security/routes.config');
 const  { setupLogging } = require("./utils/logging");
+const config = require('dotenv').config()
 
 const PORT = process.env.PORT || 3001;
 
@@ -23,13 +24,12 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
-/// setting up loggin 
+/// setting up logging
 setupLogging(app);
-
-IdentityRouter.routesConfig(app);
 SecurityRouter.routesConfig(app);
+IdentityRouter.routesConfig(app);
 app.listen(PORT,() =>{
-    console.log("user service is running");
+    console.log("user service is running on port:" + PORT);
 });
 app.on('error',(error) => {
     if (error) {

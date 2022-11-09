@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/WIMPv2',{ useUnifiedTopology: true });
+const config = require('dotenv').config()
+mongoose.connect(process.env.mongoDbUrl || 'mongodb://127.0.0.1:27017/WIMPv2',{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
 const identiySchema = new Schema({
