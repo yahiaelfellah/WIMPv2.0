@@ -19,7 +19,6 @@ exports.routes = [
         auth:true,
         refresh: true,
         bodyParser:true,
-        creditCheck : true, 
         rateLimit:{
             windowsMs : 15*60*1000,
             max : 5
