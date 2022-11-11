@@ -6,6 +6,6 @@
 </template>
 <script>
 export default {
-    name:"vue-welcome"
+    name:"vue-admin"
 }
 </script>
