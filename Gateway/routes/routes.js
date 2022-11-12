@@ -5,10 +5,10 @@ exports.routes = [
 
     {
         url:`/${API_PREFIX}/auth`,
-        auth:false, 
         proxy: {
-            target:"http://localhost:3001/auth",
+            target:"http://[::1]:3001/auth",
             changeOrigin : true,
+            logLevel: "debug",
             pathRewrite: {
                 [`^/${API_PREFIX}/auth`]: '',
             },
@@ -19,14 +19,16 @@ exports.routes = [
         auth:true,
         refresh: true,
         bodyParser:true,
+        logLevel: "debug",
         rateLimit:{
             windowsMs : 15*60*1000,
             max : 5
         },
         proxy: {
-            target:"http://localhost:3001/refresh",
+            target:"http://[::1]:/refresh",
             changeOrigin : true,
             timeout: 3000,
+            logLevel: "debug",
             pathRewrite: {
                 [`^/${API_PREFIX}/refresh`]: '',
             },

@@ -21,7 +21,7 @@
   <nav>
     <div class="select-box ov">
       <h2>Building :</h2>
-      <el-select v-model="value" class="m-2" placeholder="Select">
+      <el-select v-model="value" class="m-2" placeholder="Select" size="small">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -35,7 +35,7 @@
     </div>
     <div class="select-box ov">
       <h2>Department :</h2>
-      <el-select v-model="value" class="m-2" placeholder="Select">
+      <el-select v-model="value" class="m-2" placeholder="Select" size="small">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -49,7 +49,8 @@
     </div>
     <div class="refresh">
       <button id="refresh-btn">
-        <i class="fa fa-refresh pntr" aria-hidden="true"></i>
+        <el-icon><Refresh /></el-icon>
+        <!-- <i class="fa fa-refresh pntr" aria-hidden="true"></i> -->
       </button>
     </div>
   </nav>

@@ -28,7 +28,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
     IdentityModel.findByUserName(req.body.username)
         .then((user)=>{
              if(!user[0]){
-                res.status(404).send({});
+                res.status(404).send({errors:"user not found , please check the database or the admin"});
             }else{
                 let passwordFields = user[0].password.split('$');
                 let salt = passwordFields[0];
@@ -46,7 +46,6 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
                         iat: now,
                         exp: now+validityTime
                     };
-
                     return next();
                 } else {
                     return res.status(400).send({errors: ['Invalid e-mail or password']});

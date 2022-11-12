@@ -12,12 +12,8 @@ exports.routesConfig = function (app) {
         IdentityChecker.isPasswordAndUserMatch,
         Authenticator.login
     ]);
-
     app.post('/refresh', [
         IdentityChecker.isUserStillExistsWithSamePrivileges,
         Authenticator.refresh_token
     ]);
-
-
-
 };

@@ -53,7 +53,8 @@
   </footer>
 </template>
 <script>
-import axios from "axios";
+// import axios from "axios";
+import AuthService from "../services/auth.service";
 export default {
   name: "vue-login",
   data: () => {
@@ -68,12 +69,14 @@ export default {
         username: this.username,
         password: this.password,
       };
+      const res = await AuthService.login(body);
 
-      const res = await axios.post("http://localhost:3000/api/v1/auth", body, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+
+      // const res = await axios.post("http://localhost:3000/api/v1/auth", body, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
       console.log(res);
     },
   },
