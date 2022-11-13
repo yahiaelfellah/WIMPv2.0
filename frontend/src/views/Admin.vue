@@ -15,8 +15,8 @@
         <h1>{{ name }}</h1>
         <h3>{{ id }}</h3>
       </article>
-      <el-tabs tab-position="right" style="height: 100%" class="demo-tabs">
-        <el-tab-pane label="User"><AdminContent /></el-tab-pane>
+      <el-tabs tab-position="right" style="height: 100%" class="demo-tabs" :stretch="true">
+        <el-tab-pane label="States"><AdminContent /></el-tab-pane>
         <el-tab-pane label="Config">Config</el-tab-pane>
         <el-tab-pane label="Role">Role</el-tab-pane>
         <el-tab-pane label="Task">Task</el-tab-pane>
@@ -53,6 +53,12 @@ export default {
 <style scoped>
 :root {
   --el-color-primary: #7325ef;
+}
+
+.el-tabs--right .el-tabs__header.is-right {
+    margin-right: 3%;
+      height: 100%;
+
 }
 #profile article {
   display: flex;
