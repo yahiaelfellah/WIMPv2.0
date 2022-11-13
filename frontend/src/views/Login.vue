@@ -1,17 +1,4 @@
 <template>
-  <!-- <div>
-    <h1>LOGIN</h1>
-    <form @submit.prevent="login">
-      <input v-model="username" placeholder="username" />
-      <br />
-      <br />
-      <input v-model="password" placeholder="password" type="password" />
-      <br />
-      <br />
-      <button type="submit">Login</button>
-    </form>
-  </div>
-  <div> -->
   <div class="credentials-form">
     <img class="logo" :src="require('../assets/logo.svg')" />
     <h1 class="title">
@@ -64,8 +51,8 @@
 </template>
 <script>
 import { object, string } from "yup";
-import { ElNotification } from 'element-plus'
-
+import { ElNotification } from "element-plus";
+import { ElLoading } from "element-plus";
 
 const loginFormSchema = object().shape({
   username: string().required().min(3).max(20),
@@ -115,28 +102,34 @@ export default {
         });
     },
     login() {
-      this.loading = true;
+      //this.loading = true;
       this.submitted = true;
       this.errors = { username: [], password: [] };
+      this.loading = ElLoading.service({
+        lock: true,
+        text: "Loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       loginFormSchema
         .validate(this.values, { abortEarly: false })
         .then(() => {
-          this.$store.dispatch('auth/login',this.values).then(()=> {
-            console.log("am here");
-            this.$router.push("/");
-          }, error => {
-            this.loading = false;
-            console.log(error);
-            this.message =
-                (error.response && error.response.data) ||
-                error.message ||
-                error.toString();
-                ElNotification({
-                  title : "Error",
-                  message : this.message,
-                  type:'error'
-                })
-          })
+          this.$store.dispatch("auth/login", this.values).then(
+            () => {
+              this.loading.close();
+
+              this.$router.push("/");
+            },
+            (error) => {
+              this.loading.close();
+              this.message =
+                (error.response && error.response.data) || error.message;
+              ElNotification({
+                title: "Error",
+                message: this.message,
+                type: "error",
+              });
+            }
+          );
         })
         .catch((err) => {
           for (let i in err.inner) {

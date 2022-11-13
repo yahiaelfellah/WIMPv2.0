@@ -2,22 +2,9 @@
   <header>
     <img :src="require('../assets/logo.svg')" class="logo" />
     <h1>WIMP</h1>
-    <svg
-      class="pntr"
-      id="filter"
-      data-name="Layer 1"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 48 48"
-    >
-      <defs></defs>
-      <path
-        class="cls-1"
-        d="M22,40a2,2,0,0,1-2-2V26L8.05,10.75A1.51,1.51,0,0,1,7.85,9,1.65,1.65,0,0,1,9.4,8H38.6A1.65,1.65,0,0,1,40.15,9a1.51,1.51,0,0,1-.2,1.8L28,26V38a2,2,0,0,1-2,2Zm2-13.8L36,11H12Z"
-      />
-    </svg>
+
     <button id="logout-btn" class="pntr" @click="handleLogout">Logout</button>
   </header>
-
   <nav>
     <div class="select-box ov">
       <h2>Building :</h2>
@@ -249,7 +236,7 @@ main {
 }
 
 header button {
-  margin-left: 20px;
+  margin-left: auto;
 }
 
 @media only screen and (max-width: 950px) {

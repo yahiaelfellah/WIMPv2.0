@@ -24,6 +24,9 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+:root{
+    --el-color-primary: #7325EF;
+}
 * {
     margin: 0;
     padding: 0;
