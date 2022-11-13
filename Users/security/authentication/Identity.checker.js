@@ -28,7 +28,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
     IdentityModel.findByUserName(req.body.username)
         .then((user)=>{
              if(!user[0]){
-                res.status(404).send({errors:"user not found , please check the database or the admin"});
+                res.status(404).send("user not found,please check the database or the admin");
             }else{
                 let passwordFields = user[0].password.split('$');
                 let salt = passwordFields[0];
@@ -58,7 +58,7 @@ exports.isUserStillExistsWithSamePrivileges = (req, res, next) => {
     IdentityModel.findByEmail(req.body.sub)
         .then((user)=>{
             if(!user[0]){
-                res.status(404).send({});
+                res.status(404).send("user not found,please check the database or the admin");
             }
             req.body.roles = user[0].permissionLevel;
             return next();

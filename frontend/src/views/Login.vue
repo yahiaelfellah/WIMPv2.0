@@ -19,27 +19,37 @@
       ><span></span>
     </h1>
     <form @submit.prevent="login" id="login-form">
-      <input type="hidden" name="_csrf" value="{{csrfToken}}" />
       <div class="credential">
         <p class="credential-title">Username :</p>
         <input
-          v-model="username"
+          v-model="values.username"
+          v-validate="'required|min:3|max:20'"
           id="username"
           name="username"
           type="text"
           placeholder="Username"
           class="credential-input ov"
         />
+        <div v-if="submitted && !!errors.username" class="alert alert-danger">
+          <div v-for="error in errors.username" :key="error">
+            {{ error }}
+          </div>
+        </div>
       </div>
       <div class="credential">
         <p class="credential-title">Password :</p>
         <input
-          v-model="password"
+          v-model="values.password"
           name="password"
           type="password"
           placeholder="Password"
           class="credential-input ov"
         />
+        <div v-if="submitted && !!errors.password" class="alert alert-danger">
+          <div v-for="error in errors.password" :key="error">
+            {{ error }}
+          </div>
+        </div>
       </div>
       <input type="submit" value="Login" class="credential-submit pntr" />
       <div class="redirect">
@@ -53,31 +63,98 @@
   </footer>
 </template>
 <script>
-// import axios from "axios";
-import AuthService from "../services/auth.service";
+import { object, string } from "yup";
+import { ElNotification } from 'element-plus'
+
+
+const loginFormSchema = object().shape({
+  username: string().required().min(3).max(20),
+  password: string().required(),
+});
 export default {
   name: "vue-login",
   data: () => {
     return {
-      username: "",
-      password: "",
+      values: {
+        username: "",
+        password: "",
+      },
+      errors: {
+        username: [],
+        password: [],
+      },
+
+      loading: false,
+      submitted: false,
+      successful: false,
+      message: "",
     };
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+    usernameErrors() {
+      return this.errors.username.join(",");
+    },
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push("/");
+    }
+  },
   methods: {
-    async login() {
-      const body = {
-        username: this.username,
-        password: this.password,
-      };
-      const res = await AuthService.login(body);
+    validate(field) {
+      loginFormSchema
+        .validateAt(field, this.values)
+        .then(() => {
+          this.errors[field] = "";
+        })
+        .catch((err) => {
+          this.errors[field] = err.message;
+        });
+    },
+    login() {
+      this.loading = true;
+      this.submitted = true;
+      this.errors = { username: [], password: [] };
+      loginFormSchema
+        .validate(this.values, { abortEarly: false })
+        .then(() => {
+          this.$store.dispatch('auth/login',this.values).then(()=> {
+            console.log("am here");
+            this.$router.push("/");
+          }, error => {
+            this.loading = false;
+            console.log(error);
+            this.message =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
+                ElNotification({
+                  title : "Error",
+                  message : this.message,
+                  type:'error'
+                })
+          })
+        })
+        .catch((err) => {
+          for (let i in err.inner) {
+            this.errors[err.inner[i].path].push(err.inner[i].message);
+          }
+        });
 
+      // const res = await AuthService.login(this.values);
+      // if (res) {
+      //   console.log(res);
+      //   this.$router.push("/");
+      // }
 
       // const res = await axios.post("http://localhost:3000/api/v1/auth", body, {
       //   headers: {
       //     "Content-Type": "application/json",
       //   },
       // });
-      console.log(res);
     },
   },
 };
@@ -177,6 +254,12 @@ body {
 h1 span {
   margin: 0;
   transition: all 0.5s cubic-bezier(0.41, 0.14, 0.79, 0.9);
+}
+
+.alert-danger {
+  font-size: small;
+  color: red;
+  font-style: italic;
 }
 
 h1:hover span:nth-child(-n + 4) {
