@@ -10,7 +10,8 @@ const identiySchema = new Schema({
     userName:String,
     password: String,
     permissionLevel: Number,
-    devices:Array
+    devices:Array,
+    flows: Array
 });
 
 identiySchema.virtual('id').get(function () {
