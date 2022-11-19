@@ -116,7 +116,6 @@ export default {
           this.$store.dispatch("auth/login", this.values).then(
             () => {
               this.loading.close();
-
               this.$router.push("/");
             },
             (error) => {
@@ -132,6 +131,8 @@ export default {
           );
         })
         .catch((err) => {
+                        this.loading.close();
+
           for (let i in err.inner) {
             this.errors[err.inner[i].path].push(err.inner[i].message);
           }

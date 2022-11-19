@@ -3,15 +3,26 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-//const DevicesRouter = require('./routes/routes.config');
+const http = require('http');
 
 
-// const WeMoNG = require('./lib/wemo.js');
-// var wemo = new WeMoNG();
-// //this won't work as there is no way to stop it...
-// //but is that a problem?
-// var interval = setInterval(wemo.start.bind(wemo), 60000);
-// wemo.start();
+
+
+
+// Create a server
+var server = http.createServer(app);
+
+// Create the settings object - see default settings.js file for other options
+var settings = {
+    httpAdminRoot:"/red",
+    httpNodeRoot: "/api",
+    userDir:"/home/nol/.nodered/",
+    functionGlobalContext: { }    // enables global context
+};
+
+
+
+
 /**
  * CORS
  */
@@ -30,10 +41,13 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json());
 
-app.listen(3002,() =>{
+// Serve the http nodes UI from /api
+app.use(settings.httpNodeRoot,RED.httpNode);
+
+server.listen(3002,() =>{
     console.log("user service is running");
 });
-app.on('error',(error) => {
+server.on('error',(error) => {
     if (error) {
         console.error(error);
         return process.exit(1)
@@ -41,3 +55,4 @@ app.on('error',(error) => {
         console.log('express main configured  and listening on port:.')
     }
 });
+
