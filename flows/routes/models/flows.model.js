@@ -1,14 +1,11 @@
 const mongoose = require("mongoose")
-mongoose.connect('mongodb://localhost:27017/WIMPv2',{ useUnifiedTopology: true });
+require('dotenv').config()
+mongoose.connect(process.env.DB_URL,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
 const flowSchema = new Schema({
-    flowId: String, 
-    flowData : {
-        type:Object,
-        default:{}        
-    }, 
-
+    flowId : String,
+    flowData :Object
 })
 
 flowSchema.virtual('id').get(function() {
@@ -25,13 +22,6 @@ flowSchema.findById = function(cb){
 
 const Flow = mongoose.model('flows',flowSchema);
 
-exports.findByType = (type) => {
-    return Flow.find({deviceType:type})
-}
-
-exports.findByOwner = (owner) => {
-    return Flow.find({deviceOwner:owner});
-}
 
 exports.findById = (id) => {
     return Flow.findById(id).then((result) => {
@@ -44,6 +34,7 @@ exports.findById = (id) => {
 
 exports.create = (data) => {
     const flow = new Flow(data);
+    console.log(data);
     return flow.save();
 }
 
@@ -71,16 +62,35 @@ exports.put = (id,data) => {
     });
 };
 
+exports.pathFlowById = (id,data) => {
+    return Flow.findByIdAndUpdate(id,data);
+}
+
+
+exports.patchFlowId = (id,flowId) => {
+    return new Promise((resolve,reject) => {
+        Flow.findById(id,function(err,flow){
+            if(err) reject(err);
+            flow.flowId = flowId
+
+            flow.save(function(err,updates){
+                if(err) reject(err);
+                resolve(updates);
+            })
+        });
+    })
+}
+
 exports.patch = (id, data) => {
     return new Promise((resolve, reject) => {
-        Flow.findById(id, function (err, device) {
+        Flow.findById(id, function (err, flow) {
             if (err) reject(err);
-            let actualPermisssion = device.permissionLevel;
+            let actualPermisssion = flow.permissionLevel;
             for (let i in data) {
-                device[i] = data[i];
+                flow[i] = data[i];
             }
-            device.permissionLevel = actualPermisssion;
-            device.save(function (err, updates) {
+            flow.permissionLevel = actualPermisssion;
+            flow.save(function (err, updates) {
                 if (err) return reject(err);
                 resolve(updates);
             });

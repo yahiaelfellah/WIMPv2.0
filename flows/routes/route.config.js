@@ -1,25 +1,25 @@
 
-const flowProvider = require('./controllers/device.provider');
+const flowProvider = require('./controllers/flows.provider');
 
 exports.routesConfig = (app) => {
-    app.post('/flows', [
+    app.post('/flow', [
         flowProvider.insert
     ]);
-    app.get('/flows', [
+    app.get('/flow', [
         flowProvider.list
     ]);
-    app.get('/flows/:id', [
+    app.get('/flow/:id', [
         flowProvider.getById
     ]);
 
-    app.put('/flows/:id', [
+    app.put('/flow/:id', [
         flowProvider.putById
     ]);
 
-    app.patch('/flows/:id', [ 
-        flowProvider.patchById
-    ]);
-    app.delete('/flows/:id', [
+    // app.patch('/flow/:id', [ 
+    //     flowProvider.patchById
+    // ]);
+    app.delete('/flow/:id', [
         flowProvider.removeById
     ]);
 

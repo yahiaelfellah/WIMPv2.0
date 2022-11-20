@@ -1,20 +1,36 @@
 var http = require('http');
 var express = require("express");
 var RED = require("node-red");
-const permissions = require("./security/flow.permission")
-const flowRouter = require("./routes/route.config");
-const bodyParser = require('body-parser');
-
+var axios = require("axios");
 require('dotenv').config()
 
 // Create an Express app
 var app = express();
-// body parser 
-app.use(bodyParser.json());
-/// add api to to the app
-flowRouter.routesConfig(app);
 // Create a server
 var server = http.createServer(app);
+const config = {
+    headers : {
+        "Node-RED-API-Version":"v1",
+        "Node-RED-Deployment-Type":"full"
+    }
+    }
+const opt1 ={ 
+    flows: [
+    {
+        "id": "templateflow0",
+        "type": "tab",
+        "label": "tempalte flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    }
+],
+req:{
+    "Node-RED-API-Version":"v1",
+    "Node-RED-Deployment-Type":"full"
+}
+}
+
 
 // Create the settings object - see default settings.js file for other options
 var settings = {
@@ -28,12 +44,24 @@ var settings = {
 RED.init(server,settings);
 
 // Serve the editor UI from /red
-app.use(settings.httpAdminRoot, RED.httpAdmin);
+app.use(settings.httpAdminRoot,RED.httpAdmin);
 
 // Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,permissions.PermissionLevelRequired,RED.httpNode);
+app.use(settings.httpNodeRoot,RED.httpNode);
 
 server.listen(8000);
 
+
 // Start the runtime
 RED.start();
+
+// // RED test addFlow 
+
+
+
+RED.runtime.flows.addFlow(opt1);
+
+
+
+
+
