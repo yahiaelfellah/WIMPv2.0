@@ -1,9 +1,16 @@
 const flowModel = require("../models/flows.model");
 const controller = require("../controllers/flows.controller");
-
+const jwt = require("jsonwebtoken")
 exports.insert =  (req, res) => {
-  flowModel.create(req.body).then(async(result) => {
-    controller.insert(res,result._id , req.body.flowData);
+  flowModel.create(req.body).then((result) => {
+    if(result){
+        let authorization = req.headers["authorization"].split(" ");
+        req.jwt = jwt.decode(authorization[1]);
+        req._id = result._id;
+        controller.create(res,req);
+    }else {
+        res.status(409).send({ errors : "flow already exists in the database "});
+    }
   });
 };
 exports.list = (req, res) => {
@@ -41,3 +48,6 @@ exports.removeById = (req, res) => {
     res.status(204).send({});
   });
 };
+
+
+

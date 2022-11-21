@@ -1,32 +1,36 @@
 const axios = require("axios");
 const flowModel = require("../models/flows.model");
 
-const config = {
-  headers: {
-    "Node-RED-API-Version": "v2",
-    "Node-RED-Deployment-Type": "full",
-  },
-};
 
-create_flow_data = (_id, _data) => {
+/*
+ Use this when u call the /flows in the headers of the requests
+*/
+// const config = {
+//   headers: {
+//     "Node-RED-API-Version": "v2",
+//     "Node-RED-Deployment-Type": "full",
+//   },
+// };
+
+create_flow_data = (req) => {
   // check if _data is an array
   return {
-    id: _id,
-    label: _id,
-    nodes: Array.isArray(_data) ? _data : Array(_data),
+    id: req._id,
+    label: req.jwt.name.split(" ")[0],
+    nodes: Array.isArray(req.body.flowData) ? req.body.flowData : Array(req.body.flowData),
   };
 };
 
-exports.insert = async (res, id, data) => {
+exports.create = async (res, req) => {
   try {
-    const res = await axios.post(
+    const result = await axios.post(
       process.env.FLOW_URL,
-      create_flow_data(id, data)
+      create_flow_data(req)
     );
-    const _ = await flowModel.patchFlowId(id, res.data.id);
-    res.status(201).send({ id: id, flowId: res.data.id });
+    const _ = await flowModel.pathFlowById( req._id, { flowId : result.data.id});
+    res.status(201).send({ id: req.id, flowId: result.data.id });
   } catch (error) {
-    res.status(400).send({
+    res.status(409).send({
       errors:
         error && error.response && error.response.data
           ? error.response.data
@@ -35,14 +39,40 @@ exports.insert = async (res, id, data) => {
   }
 };
 
-exports.put = async (id, data) => {
-  return await axios.put(
-    `${process.env.FLOW_URL}/${id}`,
-    create_flow_data(id, data)
-  );
+
+exports.insert = async (req,res) => {
+    try{
+        const result = await axios.post(
+            process.env.FLOW_URL,
+            create_flow_data(req)
+          );
+        res.status(201).send({ message : "flow loaded successfully"})
+    }catch(error){
+        res.status(409).send({
+            errors:
+              error && error.response && error.response.data
+                ? error.response.data
+                : error,
+          })
+    }
+
+}
+
+exports.put = async (res, id, data) => {
+  try {
+    const res = await axios.put(
+      `${process.env.FLOW_URL}/${id}`,
+      create_flow_data(id, data)
+    );
+  } catch (error) {
+    res.status(409).send({
+      errors:
+        error && error.response && error.response.data
+          ? error.response.data
+          : error,
+    });
+  }
 };
 
-exports.getFlows = async (id) => {
-  const res = await axios.get(process.env.FLOW_URL);
-  return res;
-};
+
+

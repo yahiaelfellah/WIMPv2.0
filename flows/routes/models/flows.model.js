@@ -6,7 +6,10 @@ const Schema = mongoose.Schema;
 const flowSchema = new Schema({
     flowId : String,
     flowData :Object
-})
+
+    
+}
+)
 
 flowSchema.virtual('id').get(function() {
     return this._id.toHexString();
@@ -17,10 +20,27 @@ flowSchema.set('toJSON',{
 })
 
 flowSchema.findById = function(cb){
-    return this.model('flows').find({deviceId:this.id},cb)
+    return this.model('flows').find({flowId:this.id},cb)
 }
 
+flowSchema.pre('save', function (next) {
+    var self = this;
+    Flow.find({flowData : self.flowData}, function (err, docs) {
+        if (!docs.length){
+            next();
+        }else{                
+            console.log('data exists: ',self.flowData);
+            next(new Error("data exists!"));
+        }
+    });
+}) ;
+
 const Flow = mongoose.model('flows',flowSchema);
+
+checkIfExists = async (data) => {
+    return await Flow.exists(data);
+}
+
 
 
 exports.findById = (id) => {
@@ -34,8 +54,12 @@ exports.findById = (id) => {
 
 exports.create = (data) => {
     const flow = new Flow(data);
-    console.log(data);
-    return flow.save();
+    try{
+        return  flow.save(); 
+    }catch(err){
+        return new Promise((resolve,reject) => resolve(null));
+    }
+
 }
 
 exports.list = (perPage, page) => {
@@ -68,6 +92,7 @@ exports.pathFlowById = (id,data) => {
 
 
 exports.patchFlowId = (id,flowId) => {
+      
     return new Promise((resolve,reject) => {
         Flow.findById(id,function(err,flow){
             if(err) reject(err);
