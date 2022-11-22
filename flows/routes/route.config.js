@@ -19,6 +19,11 @@ exports.routesConfig = (app) => {
     // app.patch('/flow/:id', [ 
     //     flowProvider.patchById
     // ]);
+
+    app.post('/flows/updates',[
+        flowProvider.updateFlows
+    ])
+
     app.delete('/flow/:id', [
         flowProvider.removeById
     ]);

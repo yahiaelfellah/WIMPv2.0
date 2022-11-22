@@ -58,5 +58,17 @@ exports.routes = [
             },
         }
     },
+    {
+        url:`/${API_PREFIX}/flows`,
+        auth:true, // if a user needs to be authenticated for accessing this endpoint
+        proxy: {
+            // contains information about the target to which the request should be redirected
+            target:"http://localhost:8000/flows",
+            changeOrigin : true,
+            pathRewrite: {
+                [`^/${API_PREFIX}/flows`]: '',
+            },
+        }
+    },
 ]
 

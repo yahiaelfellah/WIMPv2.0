@@ -27,7 +27,7 @@ exports.create = async (res, req) => {
       process.env.FLOW_URL,
       create_flow_data(req)
     );
-    const _ = await flowModel.pathFlowById( req._id, { flowId : result.data.id});
+    await flowModel.pathFlowById( req._id, { flowId : result.data.id});
     res.status(201).send({ id: req.id, flowId: result.data.id });
   } catch (error) {
     res.status(409).send({
@@ -46,8 +46,13 @@ exports.insert = async (req,res) => {
             process.env.FLOW_URL,
             create_flow_data(req)
           );
-        res.status(201).send({ message : "flow loaded successfully"})
+        await flowModel.pathFlowById( req._id, { flowId : result.data.id});
+        res.status(201).send({ 
+          flowId:result.data.id,
+          message : "flow loaded successfully"
+        })
     }catch(error){
+      console.log(error)
         res.status(409).send({
             errors:
               error && error.response && error.response.data
@@ -58,21 +63,9 @@ exports.insert = async (req,res) => {
 
 }
 
-exports.put = async (res, id, data) => {
-  try {
-    const res = await axios.put(
-      `${process.env.FLOW_URL}/${id}`,
-      create_flow_data(id, data)
-    );
-  } catch (error) {
-    res.status(409).send({
-      errors:
-        error && error.response && error.response.data
-          ? error.response.data
-          : error,
-    });
-  }
-};
+exports.list = () => {
+  return axios.get(process.env.FLOWS_URL);
+}
 
 
 

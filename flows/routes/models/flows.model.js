@@ -7,7 +7,6 @@ const flowSchema = new Schema({
     flowId : String,
     flowData :Object
 
-    
 }
 )
 
@@ -88,6 +87,13 @@ exports.put = (id,data) => {
 
 exports.pathFlowById = (id,data) => {
     return Flow.findByIdAndUpdate(id,data);
+}
+exports.patchFlowByFlowId = (id,data) => {
+    return Flow.findOneAndUpdate({
+        flowId:id,
+    },data,{
+        returnOriginal: true
+      });    
 }
 
 

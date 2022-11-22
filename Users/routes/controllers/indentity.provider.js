@@ -42,7 +42,7 @@ exports.putById = (req, res) => {
     }
     IdentityModel.putIdentity(req.params.userId, req.body)
         .then((result)=>{
-            req.status(204).send({});
+            res.status(204).send({});
         });
 };
 
@@ -57,6 +57,12 @@ exports.patchById = (req, res) => {
             res.status(204).send({});
         });
 };
+
+exports.patchFlowsById =(req,res) => {
+    IdentityModel.patchIdentityFlows(req.params.userId,req.body.flow).then((result) => {
+        res.status(204).send({});
+    })
+}
 
 exports.removeById = (req, res) => {
     IdentityModel.removeById(req.params.userId)
