@@ -8,7 +8,6 @@ exports.routes = [
         proxy: {
             target:"http://[::1]:3001/auth",
             changeOrigin : true,
-            logLevel: "debug",
             pathRewrite: {
                 [`^/${API_PREFIX}/auth`]: '',
             },
@@ -16,19 +15,16 @@ exports.routes = [
     },
     {
         url:`/${API_PREFIX}/refresh`,
-        auth:true,
-        refresh: true,
-        bodyParser:true,
-        logLevel: "debug",
+        authenticationRequired:true,
+        applyBodyParser:true,
         rateLimit:{
             windowsMs : 15*60*1000,
             max : 5
         },
         proxy: {
-            target:"http://[::1]:/refresh",
+            target:"http://[::1]:3001/refresh",
             changeOrigin : true,
             timeout: 3000,
-            logLevel: "debug",
             pathRewrite: {
                 [`^/${API_PREFIX}/refresh`]: '',
             },
@@ -36,7 +32,7 @@ exports.routes = [
     },
     {
         url:`/${API_PREFIX}/users`,
-        auth:true, // if a user needs to be authenticated for accessing this endpoint
+        authenticationRequired:true, // if a user needs to be authenticationRequiredenticated for accessing this endpoint
         proxy: {
             // contains information about the target to which the request should be redirected
             target:"http://localhost:3001/users",
@@ -48,7 +44,7 @@ exports.routes = [
     },
     {
         url:`/${API_PREFIX}/flow`,
-        auth:true, // if a user needs to be authenticated for accessing this endpoint
+        authenticationRequired:true, // if a user needs to be authenticated for accessing this endpoint
         proxy: {
             // contains information about the target to which the request should be redirected
             target:"http://localhost:8000/flow",
@@ -60,7 +56,7 @@ exports.routes = [
     },
     {
         url:`/${API_PREFIX}/flows`,
-        auth:true, // if a user needs to be authenticated for accessing this endpoint
+        authenticationRequired:true, // if a user needs to be authenticated for accessing this endpoint
         proxy: {
             // contains information about the target to which the request should be redirected
             target:"http://localhost:8000/flows",

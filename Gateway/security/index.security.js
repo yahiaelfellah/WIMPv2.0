@@ -54,7 +54,7 @@ exports.setupAuthentication = (app, routes) => {
     })
   );
   routes.forEach((route) => {
-    if (route.auth) {
+    if (route.authenticationRequired) {
       app.use(
         route.url,
         !route.refresh
