@@ -53,6 +53,7 @@
 import { object, string } from "yup";
 import { ElNotification } from "element-plus";
 import { ElLoading } from "element-plus";
+import { AuthenticationService } from "../services/auth.service";
 
 const loginFormSchema = object().shape({
   username: string().required().min(3).max(20),
@@ -77,18 +78,16 @@ export default {
       message: "",
     };
   },
+  created() {
+    if (AuthenticationService.currentUserValue) {
+      this.$router.push("/");
+    }
+    this.returnUrl = this.$route.query.returnUrl || "/";
+  },
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
     usernameErrors() {
       return this.errors.username.join(",");
     },
-  },
-  mounted() {
-    if (this.loggedIn) {
-      this.$router.push("/");
-    }
   },
   methods: {
     validate(field) {
@@ -113,7 +112,7 @@ export default {
       loginFormSchema
         .validate(this.values, { abortEarly: false })
         .then(() => {
-          this.$store.dispatch("auth/login", this.values).then(
+          AuthenticationService.login(this.values).then(
             () => {
               this.loading.close();
               this.$router.push("/");
@@ -127,28 +126,15 @@ export default {
                 message: this.message,
                 type: "error",
               });
-            }
-          );
+            });
         })
         .catch((err) => {
-                        this.loading.close();
+          this.loading.close();
 
           for (let i in err.inner) {
             this.errors[err.inner[i].path].push(err.inner[i].message);
           }
         });
-
-      // const res = await AuthService.login(this.values);
-      // if (res) {
-      //   console.log(res);
-      //   this.$router.push("/");
-      // }
-
-      // const res = await axios.post("http://localhost:3000/api/v1/auth", body, {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
     },
   },
 };

@@ -61,6 +61,9 @@
   </main>
 </template>
 <script>
+import { AuthenticationService} from "../services/auth.service"
+import { Role } from "../helpers/rolers";
+
 const options = [
   {
     value: "Option1",
@@ -87,6 +90,11 @@ export default {
   name: "vue-home",
   data() {
     return options;
+  },
+  created(){
+    if(AuthenticationService.currentUserValue.role === Role.Master){
+      this.$router.push('/admin');
+    }
   },
   methods:{
     handleLogout(){

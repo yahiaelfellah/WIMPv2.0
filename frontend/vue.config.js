@@ -1,5 +1,5 @@
 const { defineConfig } = require("@vue/cli-service");
-const Dotenv = require("dotenv-webpack");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 const webpack = require("webpack");
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -8,9 +8,12 @@ module.exports = defineConfig({
       // Work around for Buffer is undefined:
       // https://github.com/webpack/changelog-v5/issues/10
       new webpack.ProvidePlugin({
+        process: 'process/browser',
         Buffer: ["buffer", "Buffer"],
       }),
-      new Dotenv(),
+      new NodePolyfillPlugin()
+
+      // new Dotenv(),
     ],
   },
 });
