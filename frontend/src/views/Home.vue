@@ -62,7 +62,7 @@
 </template>
 <script>
 import { AuthenticationService} from "../services/auth.service"
-import { Role } from "../helpers/rolers";
+import { Role } from "../helpers/roles";
 
 const options = [
   {
@@ -91,8 +91,8 @@ export default {
   data() {
     return options;
   },
-  created(){
-    if(AuthenticationService.currentUserValue.role === Role.Master){
+  mounted(){
+    if(AuthenticationService.currentUserValue.roles === Role.Master){
       this.$router.push('/admin');
     }
   },

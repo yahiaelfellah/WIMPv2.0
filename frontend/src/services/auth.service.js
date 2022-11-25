@@ -25,20 +25,21 @@ async function login (user) {
       username: user.username,
       password: user.password
     });
-  if (response.data && response.data.accessToken) {
+  if (response.data) {
     // save the authentication token that will be used to get information about the user
-    localStorage.setItem("currentTokens", JSON.stringify(response.data));
     currentAuthTokens.next(response.data);
+    currentUserSubject.next(jwt.decode(response.data.accessToken))
+    // saving in the localStorage
     // save the user data 
-    const userInfo = jwt.decode(response.data.accessToken)
-    localStorage.setItem('currentUser',JSON.stringify(userInfo))
-    currentUserSubject.next(userInfo)
+    localStorage.setItem("currentTokens", JSON.stringify(currentAuthTokens.value));
+    localStorage.setItem('currentUser',JSON.stringify(currentUserSubject.value));
   }
   return response.data;
   }
 
   function logout(){
-    localStorage.removeItem("currentTokens");
+    localStorage.removeItem('currentTokens');
+    localStorage.removeItem('currentUser')
     currentUserSubject.next(null);
     currentAuthTokens.next(null);
 }

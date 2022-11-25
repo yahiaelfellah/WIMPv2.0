@@ -1,6 +1,6 @@
 <template>
     <el-card class="box-card">
-          <iframe src="http://127.0.0.1:1880/#flow/f0e112650fd4fdc6" id="nodered-container"></iframe>
+          <iframe src="http://127.0.0.1:1880/red/#flow/" id="nodered-container"></iframe>
   </el-card>     
          
 </template>
@@ -10,7 +10,7 @@ export default {
     props:{
         src: {
             type:String ,
-             default:'http://127.0.0.1:1880/#flow/f0e112650fd4fdc6',
+             default:'http://127.0.0.1:1880/red/#flow/',
              required: true
         }
     }

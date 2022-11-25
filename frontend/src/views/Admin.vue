@@ -12,15 +12,19 @@
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           size="large"
         />
-        <h1>{{ name }}</h1>
-        <h3>{{ id }}</h3>
+        <h1>{{ capitalizeFirstLetter(userFromApi?.firstName) }}</h1>
+        <el-tag class="ml-2" type="success" size="large">{{ userRole }}</el-tag>
       </article>
-      <el-tabs tab-position="right" style="height: 100%" class="demo-tabs" :stretch="true">
+      <div id="content">
+        <AdminContent :cols="cols" :tableData="allUsers" />
+      </div>
+      <!-- <el-tabs tab-position="right" style="height: 100%" class="demo-tabs" :stretch="true">
         <el-tab-pane label="States"><AdminContent /></el-tab-pane>
         <el-tab-pane label="Config">Config</el-tab-pane>
         <el-tab-pane label="Role">Role</el-tab-pane>
         <el-tab-pane label="Task">Task</el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
+      <!-- <Map /> -->
     </section>
     <footer class="fixed-footer">
       <h3>&copy; 2022 wimp</h3>
@@ -29,24 +33,64 @@
 </template>
 <script>
 // import IFrame from "@/components/NodeRedIframe.vue"
-import AdminContent from "@/components/AdminStatus.vue";
+// import AdminContent from "@/components/AdminStatus.vue";
+import { userService } from "../services/user.service";
+import { AuthenticationService } from "../services/auth.service";
+import { ElNotification } from "element-plus";
+import { Role } from "../helpers/roles";
+import AdminContent from "../components/AdminContent.vue";
+// import Map  from '../components/MapboxComponent.vue'
+
 export default {
   name: "vue-admin",
   components: {
     // IFrame,
+    // AdminContent,
+    // Map,
     AdminContent,
   },
   data: () => ({
     myIframe: null,
+    currentUser: AuthenticationService.currentUserValue,
+    allUsers : null,
+    userFromApi: null,
   }),
+  computed: {
+    userRole() {
+      return Object.keys(Role).find(
+        (key) => Role[key] === this.currentUser.roles
+      );
+    },
+    cols() {
+      return this.allUsers && this.allUsers.length !== 0 ? Object.keys(this.allUsers[0]) : [];
+    },
+  },
+  mounted() {
+    userService
+      .getById(this.currentUser.userId)
+      .then((response) => (this.userFromApi = response.data))
+      .catch((err) => {
+        ElNotification({
+          title: "Error",
+          message: err,
+          type: "error",
+        });
+      });
+      userService.getAll().then((response) => {
+        this.allUsers = response.data
+      })
+},
   methods: {
     onLoad(frame) {
       this.myIframe = frame.contentWindow;
     },
-        handleLogout(){
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    }
+    handleLogout() {
+      AuthenticationService.logout();
+      this.$router.push("/login");
+    },
+    capitalizeFirstLetter(string) {
+      return string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
+    },
   },
 };
 </script>
@@ -54,16 +98,19 @@ export default {
 :root {
   --el-color-primary: #7325ef;
 }
-
+#content {
+  padding: 2%;
+}
 .el-tabs--right .el-tabs__header.is-right {
-    margin-right: 3%;
-      height: 100%;
-
+  margin-right: 3%;
+  height: 100%;
 }
 #profile article {
   display: flex;
   flex-flow: column;
   align-items: center;
+  justify-content: space-around;
+  height: 14vh;
 }
 #profile article img {
   border-radius: 100px;

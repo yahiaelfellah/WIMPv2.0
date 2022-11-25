@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { Role } from "@/helpers/rolers";
+import { Role } from "@/helpers/roles";
 import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
 import Register from "@/views/Register.vue";
@@ -22,13 +22,13 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
-    meta: { authorize: [Role.Admin] },
+    meta: { authorize: [Role.Master] },
   },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { authorize: [Role.Admin] },
+    meta: { authorize: [Role.Master] },
   },
   // otherwise redirect to home
   { path: "/:catchAll(.*)", redirect: "/" },
@@ -50,8 +50,10 @@ router.beforeEach((to, from, next) => {
       }
 
       // check if route is restricted by role
-      if (authorize.length && !authorize.includes(currentUser.role)) {
+      if (authorize.length && !authorize.includes(currentUser.roles)) {
           // role not authorised so redirect to home page
+          console.log(currentUser.roles)
+          if(currentUser.roles === Role.Master) return({ path: '/admin'})
           return next({ path: '/' });
       }
   }
