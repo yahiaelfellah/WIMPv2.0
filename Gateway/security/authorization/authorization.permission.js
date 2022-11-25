@@ -7,10 +7,12 @@ const Surfer = config.permissionLevels.Surfer;
 exports.minimumPermissionLevelRequired = (required_permission_level) => {
     return (req, res, next) => {
         let user_permission_level = parseInt(req.jwt.roles);
-        if (user_permission_level & required_permission_level) {
+        if (user_permission_level & required_permission_level || user_permission_level > required_permission_level) {
             return next();
         } else {
-            return res.status(403).send();
+            return res.status(403).send({
+                err : 'problem with the level of permission'
+            });
         }
     };
 };

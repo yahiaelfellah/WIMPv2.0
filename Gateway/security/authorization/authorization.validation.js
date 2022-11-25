@@ -16,10 +16,11 @@ exports.validJWTNeeded = (req, res, next) => {
                 return next();
             }
         } catch (err) {
+            console.log('here validJWTNeed');
             return res.status(403).send(err);
         }
     } else {
-        return res.status(401).send();
+        return res.status(401).send({err:'valid JWT is Needed'});
     }
 };
 

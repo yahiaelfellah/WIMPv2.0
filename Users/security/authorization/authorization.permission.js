@@ -8,10 +8,10 @@ exports.minimumPermissionLevelRequired = (required_permission_level) => {
         let authorization = req.headers['authorization'].split(' ');
         req.jwt = jwt.decode(authorization[1]);
         let user_permission_level = parseInt(req.jwt.roles);
-        if (user_permission_level & required_permission_level) {
+        if (user_permission_level & required_permission_level || user_permission_level > required_permission_level) {
             return next();
         } else {
-            return res.status(403).send();
+            return res.status(403).send({err:'minimum permission level '});
         }
     };
 };
@@ -25,7 +25,9 @@ exports.onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
         if (user_permission_level & Master) {
             return next();
         } else {
-            return res.status(403).send();
+            return res.status(403).send({
+                err: 'problem with onlySameUserOrAdminCanDoThisAction'
+            });
         }
     }
 
