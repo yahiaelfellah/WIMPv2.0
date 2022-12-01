@@ -88,6 +88,19 @@ exports.patchIdentityFlows = (id,flow) => {
     })
 }
 
+exports.patchIdentityDevices = (id ,device) => {
+    return new Promise((resolve,reject) => {
+        Identity.findById(id, function(err,user) {
+            if(err) reject(err);
+            user.devices.push(device);
+            user.save(function(err,updates){
+                if(err) return reject(err);
+                resolve(updates);
+            })
+        })
+    })
+}
+
 
 exports.patchIdentity = (id, userData) => {
     return new Promise((resolve, reject) => {

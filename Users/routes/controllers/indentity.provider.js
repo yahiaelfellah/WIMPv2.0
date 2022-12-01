@@ -60,8 +60,14 @@ exports.patchById = (req, res) => {
 
 exports.patchFlowsById =(req,res) => {
     IdentityModel.patchIdentityFlows(req.params.userId,req.body.flow).then((result) => {
-        res.status(204).send({});
+        res.status(204).send({message : "updated successfully"});
     })
+}
+
+exports.patchDevicesById = (req,res) => {
+    IdentityModel.patchIdentityDevices(req.params.userId,req.body.device).then((result) => {
+        res.status(204).send({message: "updated successefully "})
+    } )
 }
 
 exports.removeById = (req, res) => {
