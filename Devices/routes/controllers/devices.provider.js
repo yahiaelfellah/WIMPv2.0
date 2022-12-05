@@ -26,8 +26,8 @@ exports.findById = (req,res) => {
     })
 }
 
-exports.findByOwner = (req,res) => {
-    DeivceModel.findByOwner(req.params.deviceOwner).then((result) => {
+exports.findByFlowId = (req,res) => {
+    DeivceModel.findByflowId(req.params.flowId).then((result) =>{
         res.status(200).send(result);
     })
 }

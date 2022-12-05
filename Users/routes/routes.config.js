@@ -25,11 +25,11 @@ exports.routesConfig = (app) => {
         IdentityProvider.putById
     ]);
 
-    // app.patch('/users/:userId', [
-    //     AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
-    //     AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
-    //     IdentityProvider.patchById
-    // ]);
+    app.patch('/users/:userId', [
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
+        IdentityProvider.patchById
+    ]);
     app.patch('/users/:userId/flows', [
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
@@ -39,7 +39,7 @@ exports.routesConfig = (app) => {
     app.patch('/users/:userId/devices',[
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
-        IdentityProvider.pat
+        IdentityProvider.patchDevicesById
     ])
     app.delete('/users/:userId', [
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),

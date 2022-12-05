@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const deviceSchema = new Schema({
     deviceId: String, 
     deviceType : String, 
-    deviceOwner : String,
-    deviceData: {type:Array,"default":[]}
+    flowId : String,
 })
 
 deviceSchema.virtual('id').get(function() {
@@ -23,13 +22,11 @@ deviceSchema.findById = function(cb){
 
 const Device = mongoose.model('Devices',deviceSchema);
 
-exports.findByType = (type) => {
-    return Device.find({deviceType:type})
+
+exports.findByflowId = (id) => {
+    return Device.findOne({flowId:id});
 }
 
-exports.findByOwner = (owner) => {
-    return Device.find({deviceOwner:owner});
-}
 
 exports.findById = (id) => {
     return Device.findById(id).then((result) => {
@@ -39,6 +36,9 @@ exports.findById = (id) => {
         return result;
     })
 }
+
+
+
 
 exports.createDevice = (deviceData) => {
     const device = new Device(deviceData);
