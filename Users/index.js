@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 const IdentityRouter = require('./routes/routes.config');
 const SecurityRouter = require('./security/routes.config');
 const  { setupLogging } = require("./utils/logging");
-const { broker } = require("./messaging/user.messaging");
+const { sender , consumer } = require("./messaging/user.messaging");
+// const {sender} = require("./messaging/sender")
+// const { consumer } = require("./messaging/consumer")
 const config = require('dotenv').config()
 const PORT = process.env.PORT || 3001;
 app.use(function (req, res, next) {
@@ -28,7 +30,8 @@ SecurityRouter.routesConfig(app);
 IdentityRouter.routesConfig(app);
 
 /// Connection to the RabbitMQ broker 
-broker.connect()
+/// Listen to the data sent by other ms
+consumer()
 
 app.listen(PORT,() =>{
     console.log("user service is running on port:" + PORT);

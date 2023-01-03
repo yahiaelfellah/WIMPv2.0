@@ -36,6 +36,6 @@ app.use(settings.httpNodeRoot,permissions.PermissionLevelRequired,RED.httpNode);
 
 server.listen(8000);
 // Connecting to the broker 
-broker.connect();
+//broker.connect();
 // Start the runtime
 RED.start();
