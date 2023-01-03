@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const config = require('dotenv').config()
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env' )});
+
 mongoose.connect(process.env.mongoDbUrl,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 

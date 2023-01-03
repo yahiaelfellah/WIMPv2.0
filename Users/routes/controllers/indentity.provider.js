@@ -1,6 +1,7 @@
 const IdentityModel = require('../models/identity.model');
 const crypto = require('crypto');
 
+
 exports.insert = (req, res) => {
     let salt = crypto.randomBytes(16).toString('base64');
     let hash = crypto.scryptSync(req.body.password,salt,64,{N:16384}).toString("base64");

@@ -1,6 +1,8 @@
 const amqp = require('amqplib')
 const { serverCfg, queueCfg} = require('./config')
+const IdentityModel = require('../routes/models/identity.model');
 const schema = 'amqp://'
+require('dotenv').config();
 
 /**
  *  Establish the connection with the RabbitMQ broker
@@ -58,10 +60,18 @@ exports.consumer = async () => {
         console.info('consumer listening...!')
         const chan = await initMQ()
         await chan.consume(queueCfg.queueId, function(msg){
-            //console.log(msg.content.toString())
             const rc = JSON.parse(msg.content.toString())
-            console.info(rc)
-            
+            // TODO:  Check the type of the update we need to do 
+            // we define the message as follow { action : actionType , data: data , timestamp : date }
+            console.info(rc);
+            switch(rc.action){
+                case "patch_flow": 
+                    IdentityModel.patchIdentityFlows(rc.data.id, rc.data.body)
+                    break;
+                case "patch_device": 
+                    IdentityModel.patchIdentityDevices(rc.data.id, rc.data.body)
+                    break;
+            }
             chan.ack(msg)
         }, { noAck: false })
     } catch(e) {

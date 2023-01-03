@@ -6,10 +6,10 @@ const bodyParser = require('body-parser');
 const IdentityRouter = require('./routes/routes.config');
 const SecurityRouter = require('./security/routes.config');
 const  { setupLogging } = require("./utils/logging");
+const path = require('path')
 const { sender , consumer } = require("./messaging/user.messaging");
-// const {sender} = require("./messaging/sender")
-// const { consumer } = require("./messaging/consumer")
-const config = require('dotenv').config()
+
+require('dotenv').config({ path: path.resolve(__dirname, '../.env' )});
 const PORT = process.env.PORT || 3001;
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin','*' );
@@ -29,9 +29,7 @@ setupLogging(app);
 SecurityRouter.routesConfig(app);
 IdentityRouter.routesConfig(app);
 
-/// Connection to the RabbitMQ broker 
-/// Listen to the data sent by other ms
-consumer()
+
 
 app.listen(PORT,() =>{
     console.log("user service is running on port:" + PORT);
@@ -44,3 +42,7 @@ app.on('error',(error) => {
         console.log('express main configured  and listening on port:.')
     }
 });
+
+/// Connection to the RabbitMQ broker 
+/// Listen to the data sent by other ms
+consumer()

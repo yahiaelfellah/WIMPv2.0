@@ -1,4 +1,6 @@
-
+const path = require("path")
+// TODO: Add all the correct dotenv require line of code  
+require('dotenv').config({ path: path.resolve(__dirname, '../.env' )});
 
 exports.serverCfg = Object.defineProperties(Object.create(null), {
     host: {
