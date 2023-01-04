@@ -46,4 +46,9 @@ exports.routesConfig = (app) => {
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.removeById
     ]);
+    app.get('/users/userId/meetings',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        AuthorizationPermission.sameUserCantDoThisAction,
+        
+    ])
 };

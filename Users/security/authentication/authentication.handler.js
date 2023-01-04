@@ -6,6 +6,8 @@ const fs = require('fs');
 
 const cert = fs.readFileSync( './security/tls/token-public-key.pem',{encoding:'utf-8'});
 
+
+// TODO: change the flow of this 
 exports.login = (req, res) => {
     try {
         let refreshId = req.body.userId + refresh_secret + req.body.jti;

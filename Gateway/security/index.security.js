@@ -45,6 +45,8 @@ exports.setupAuth = (app, routes) => {
 
 exports.setupAuthentication = (app, routes) => {
   var memoryStore = new session.MemoryStore();
+  var keycloak = new Keycloak({ store: memoryStore });
+
   app.use(
     session({
       secret: "XoR?qWvo:RYM,iX;2Tz_>{++gGIP16",
@@ -53,13 +55,14 @@ exports.setupAuthentication = (app, routes) => {
       store: memoryStore,
     })
   );
-  routes.forEach((route) => {
+  app.use(keycloak.middleware());
+   routes.forEach((route) => {
     if (route.authenticationRequired) {
       app.use(
         route.url,
         !route.refresh
-          ? [validJWTNeeded, minimumPermissionLevelRequired(Surfer)]
-          : [validJWTNeeded, verifyRefreshBodyField, validRefreshNeeded],
+          ? [validJWTNeeded, minimumPermissionLevelRequired(Surfer),keycloak.protect()]
+          : [validJWTNeeded, verifyRefreshBodyField, validRefreshNeeded,keycloak.protect()],
         function (req, res, next) {
           next();
         }
