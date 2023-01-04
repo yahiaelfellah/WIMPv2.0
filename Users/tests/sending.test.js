@@ -14,8 +14,8 @@ function RandonSend(){
                     id : "636bd093b04c87acc09ec39a",
                     body : {
                         "flows":[
-                        "test",
-                        "test1"
+                        "teste",
+                        "test1e"
                     ]
                 }
             }
