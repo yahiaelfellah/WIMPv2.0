@@ -20,7 +20,7 @@ create_flow_data = (req) => {
     nodes: Array.isArray(req.body.flowData) ? req.body.flowData : Array(req.body.flowData),
   };
 };
-
+// TODO: Change this one to load for a template flow ! 
 exports.create = async (res, req) => {
   try {
     const result = await axios.post(
@@ -39,7 +39,7 @@ exports.create = async (res, req) => {
   }
 };
 
-
+//TODO: Send update flow for the concerned user by using the ID
 exports.insert = async (req,res) => {
     try{
         const result = await axios.post(
@@ -62,6 +62,11 @@ exports.insert = async (req,res) => {
     }
 
 }
+
+/**
+ * Get all the flows is running now 
+ * @returns {Array} list of flows
+ */
 
 exports.list = () => {
   return axios.get(process.env.FLOWS_URL);

@@ -1,0 +1,46 @@
+
+{
+  "name": "node-red-node-wemo",
+  "version": "0.2.3",
+  "description": "Input and Output nodes for Belkin WeMo devices",
+  "repository" : {
+    "type":"git",
+    "url":"https://github.com/node-red/node-red-nodes.git",
+    "directory": "tree/master/hardware/wemo"
+},
+  "main": "WeMoNG.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node-red",
+    "wemo",
+    "belkin"
+  ],
+  "contributors": [
+    {
+      "email": "hardillb@gmail.com",
+      "name": "Benjamin Hardill",
+      "url": "http://www.hardill.me.uk/wordpress/"
+    },
+    {
+      "name": "Bart Butenaers"
+    }
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-ssdp": "~3.3.0",
+    "request": "~2.88.2",
+    "xml2js": "~0.4.13",
+    "util": "~0.12.4",
+    "url": "~0.11.0",
+    "ip": "~1.1.5",
+    "body-parser": "~1.20.0",
+    "q": "~1.5.1"
+  },
+  "node-red": {
+    "nodes": {
+      "wemo": "WeMoNG.js"
+    }
+  }
+}

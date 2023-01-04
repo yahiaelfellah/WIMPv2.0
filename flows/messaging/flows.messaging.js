@@ -58,7 +58,8 @@ exports.consumer = async () => {
         console.info('consumer listening...!')
         const chan = await initMQ()
         await chan.consume(queueCfg.queueId, function(msg){
-            //console.log(msg.content.toString())
+            // TODO:  Check the type of the update we need to do 
+            // we define the message as follow { action : actionType , data: data , timestamp : date }            
             const rc = JSON.parse(msg.content.toString())
             console.info(rc)
             
