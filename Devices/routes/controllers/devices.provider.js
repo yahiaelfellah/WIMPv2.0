@@ -31,3 +31,9 @@ exports.findByFlowId = (req,res) => {
         res.status(200).send(result);
     })
 }
+
+exports.removeById = (req,res) => {
+    DeviceModel.removeById(req.params.deviceId).then((result) => {
+        res.status(200).send(result);
+    })
+}

@@ -1,6 +1,7 @@
 const amqp = require('amqplib')
 const { serverCfg, queueCfg} = require('./config')
 const schema = 'amqp://'
+const DeivceModel = require("../routes/models/devices.model");
 
 /**
  *  Establish the connection with the RabbitMQ broker
@@ -60,8 +61,11 @@ exports.consumer = async () => {
         await chan.consume(queueCfg.queueId, function(msg){
             //console.log(msg.content.toString())
             const rc = JSON.parse(msg.content.toString())
-            console.info(rc)
-            
+            switch(rc.action){
+                case "patch_flowId": 
+                    DeivceModel.patchDeviceFlowId(rc.data.id, rc.data.body)
+                    break;
+            }            
             chan.ack(msg)
         }, { noAck: false })
     } catch(e) {

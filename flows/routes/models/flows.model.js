@@ -4,6 +4,7 @@ mongoose.connect(process.env.DB_URL,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
 const flowSchema = new Schema({
+    userId: String,
     flowId : String,
     flowData :Object
 

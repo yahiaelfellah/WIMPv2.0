@@ -14,7 +14,7 @@ const identiySchema = new Schema({
     permissionLevel: Number,
     devices:Array,
     flows: Array
-});
+},{ timestamps: true });
 
 identiySchema.virtual('id').get(function () {
     return this._id.toHexString();

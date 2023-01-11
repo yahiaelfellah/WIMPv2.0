@@ -9,9 +9,9 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = path.join('./security', 'token.json');
-const CREDENTIALS_PATH = path.join('./security', 'client_secret.json');
-
+const TOKEN_PATH = path.resolve(__dirname, './security','token.json' )
+const CREDENTIALS_PATH = path.resolve(__dirname, './security','client_secret.json' );
+console.log(TOKEN_PATH);
 /**
  * Reads previously authorized credentials from the save file.
  *
@@ -100,3 +100,5 @@ async function insertEvents(auth){
 }
 //authorize().then(insertEvents).catch(console.error)
 authorize().then(listEvents).catch(console.error);
+
+authorize().then(auth => listEvents(auth)).catch(console.error)

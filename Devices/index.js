@@ -3,52 +3,36 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const http = require('http');
+const DeviceRouter = require('./routes/routes.config');
+const  { setupLogging } = require("./utils/logging");
+const path = require('path')
+const { consumer } = require("./messaging/device.messaging");
 
-const config = require('dotenv').config()
-
-
-
-
-// Create a server
-var server = http.createServer(app);
-
-// Create the settings object - see default settings.js file for other options
-var settings = {
-    httpAdminRoot:"/red",
-    httpNodeRoot: "/api",
-    userDir:"/home/nol/.nodered/",
-    functionGlobalContext: { }    // enables global context
-};
-
-
-
-
-/**
- * CORS
- */
+require('dotenv').config({ path: path.resolve(__dirname, './.env' )});
+const PORT = process.env.PORT || 3006 ;
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin','*' );
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET,GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.header('Access-Control-Expose-Headers', 'Content-Length');
-    res.header('Access-Control-Allow-Headers', 'Accept, Authorization, Content-Type, X-Requested-With, Range,X-Auth');
-    if (req.method === 'OPTIONS') {
-        return res.send(200);
-    } else {
-        return next();
-    }
-});
-
+    res.header('Access-Control-Allow-Headers', 'Origin,Accept, Authorization, Content-Type, X-Requested-With, Range,X-Auth');
+    if (req.method == 'OPTIONS') {
+        res.sendStatus(200);
+      }
+      else {
+        next();
+      }
+    });
 app.use(bodyParser.json());
+/// setting up logging
+setupLogging(app);
+DeviceRouter.routesConfig(app);
 
-// Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,RED.httpNode);
 
-server.listen(3002,() =>{
-    console.log("user service is running");
+
+app.listen(PORT,() =>{
+    console.log("user service is running on port:" + PORT);
 });
-server.on('error',(error) => {
+app.on('error',(error) => {
     if (error) {
         console.error(error);
         return process.exit(1)
@@ -57,3 +41,6 @@ server.on('error',(error) => {
     }
 });
 
+/// Connection to the RabbitMQ broker 
+/// Listen to the data sent by other ms
+consumer()

@@ -3,8 +3,7 @@ mongoose.connect('mongodb://localhost:27017/WIMPv2',{ useUnifiedTopology: true }
 const Schema = mongoose.Schema;
 
 const deviceSchema = new Schema({
-    deviceId: String, 
-    deviceType : String, 
+    userId: String,
     flowId : String,
 })
 
@@ -60,6 +59,20 @@ exports.list = (perPage, page) => {
     });
 };
 
+
+exports.patchDeviceFlowId = (id, data) => {
+    return new Promise((resolve,reject) => {
+        DeviceModel.findById(id, function(err,device) {
+            if(err) reject(err);
+            device.flowId = data;
+            device.save(function(err,update){
+                if(err) return reject(err);
+                resolve(updates);
+            })
+        }) 
+    })
+}
+
 exports.putDevice = (id,deviceData) => {
     return new Promise((resolve, reject) => {
         Device.findByIdAndUpdate(id,deviceData,function (err,device) {
@@ -69,27 +82,9 @@ exports.putDevice = (id,deviceData) => {
     });
 };
 
-exports.patchDevice = (id, deviceData) => {
+exports.removeById = (id) => {
     return new Promise((resolve, reject) => {
-        Device.findById(id, function (err, device) {
-            if (err) reject(err);
-            let actualPermisssion = device.permissionLevel;
-            for (let i in deviceData) {
-                device[i] = deviceData[i];
-            }
-            device.permissionLevel = actualPermisssion;
-            device.save(function (err, updatedDevice) {
-                if (err) return reject(err);
-                resolve(updatedDevice);
-            });
-        });
-    });
-
-};
-
-exports.removeById = (deviceId) => {
-    return new Promise((resolve, reject) => {
-        Device.remove({_id: deviceId}, (err) => {
+        Device.remove({_id: id}, (err) => {
             if (err) {
                 reject(err);
             } else {

@@ -1,5 +1,5 @@
 
-const DeviceProvider = require('./controllers/device.provider');
+const DeviceProvider = require('./controllers/devices.provider');
 
 exports.routesConfig = (app) => {
     app.post('/devices', [
@@ -9,15 +9,7 @@ exports.routesConfig = (app) => {
         DeviceProvider.list
     ]);
     app.get('/devices/:deviceId', [
-        DeviceProvider.getById
-    ]);
-
-    app.put('/devices/:deviceId', [
-        DeviceProvider.putById
-    ]);
-
-    app.patch('/devices/:deviceId', [ 
-        DeviceProvider.patchById
+        DeviceProvider.findById
     ]);
     app.delete('/devices/:deviceId', [
         DeviceProvider.removeById
