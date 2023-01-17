@@ -61,14 +61,16 @@ exports.consumer = async () => {
             // TODO:  Check the type of the update we need to do 
             // we define the message as follow { action : actionType , data: data , timestamp : date }            
             const rc = JSON.parse(msg.content.toString())
-            // switch(rc.action){
+            switch(rc.action){
+                case "new_flow":
+                    flow
             //     case "patch_device": 
             //         //flowModel.patchIdentityFlows(rc.data.id, rc.data.body)
             //         break;
             //     case "patch_device": 
             //         //IdentityModel.patchIdentityDevices(rc.data.id, rc.data.body)
             //         break;
-            // }
+            }
             
             chan.ack(msg)
         }, { noAck: false })
