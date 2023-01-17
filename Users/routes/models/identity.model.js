@@ -9,6 +9,7 @@ const identiySchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
+    birthday: Date,
     userName:String,
     password: String,
     permissionLevel: Number,
