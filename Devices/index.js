@@ -30,7 +30,7 @@ DeviceRouter.routesConfig(app);
 
 
 app.listen(PORT,() =>{
-    console.log("user service is running on port:" + PORT);
+    console.log("device service is running on port:" + PORT);
 });
 app.on('error',(error) => {
     if (error) {

@@ -3,8 +3,11 @@ const DeviceProvider = require('./controllers/devices.provider');
 
 exports.routesConfig = (app) => {
     app.post('/devices', [
-        DeviceProvider.insert
+        DeviceProvider.create
     ]);
+    app.put('/devices/:deviceId', [
+        DeviceProvider.insert
+    ])
     app.get('/devices', [
         DeviceProvider.list
     ]);

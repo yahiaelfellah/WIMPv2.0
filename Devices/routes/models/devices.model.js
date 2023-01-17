@@ -4,8 +4,10 @@ const Schema = mongoose.Schema;
 
 const deviceSchema = new Schema({
     userId: String,
+    name : String, 
+    type : String, 
     flowId : String,
-})
+},{ timestamps: true })
 
 deviceSchema.virtual('id').get(function() {
     return this._id.toHexString();
@@ -39,7 +41,7 @@ exports.findById = (id) => {
 
 
 
-exports.createDevice = (deviceData) => {
+exports.create = (deviceData) => {
     const device = new Device(deviceData);
     return device.save();
 }
