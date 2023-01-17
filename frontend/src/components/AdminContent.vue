@@ -7,7 +7,8 @@
             <p style="font-weight: bold">
               <el-icon><User /></el-icon> Users
             </p>
-            <el-button type="success" round>New User</el-button>
+            <!-- <el-button type="success" round>New User</el-button> -->
+            <UserForm />
           </div>
         </template>
         <el-table :data="filterTableData" style="width: 100%" max-height="250">
@@ -92,6 +93,7 @@
 
 <script>
 import { User,Cellphone } from "@element-plus/icons-vue";
+import UserForm from "./UserForms.vue";
 import Map from "./MapboxComponent.vue"
 import { Role } from "../helpers/roles";
 export default {
@@ -105,7 +107,8 @@ export default {
   components: {
     User,
     Cellphone,
-    Map
+    Map,
+    UserForm,
   },
   props: {
     cols: {

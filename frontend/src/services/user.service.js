@@ -5,7 +5,10 @@ const API_URL = process.env.VUE_APP_API_URL;
 
 export const userService = {
     getAll,
-    getById
+    getById,
+    create,
+    deleteUser,
+    patchUser
 };
 /// define the interceptor for axios 
 axios.interceptors.response.use(response => { 
@@ -19,6 +22,18 @@ function getAll() {
 
 function getById(id) {
     return axios.get(`${API_URL}/users/${id}`, requestOptions.header())
+}
+
+function create(body) { 
+    return axios.post(`${API_URL}/users`,body,requestOptions.header());
+}
+
+function deleteUser(id) { 
+    return axios.delete(`${API_URL}/users/${id}`, requestOptions.header())
+}
+
+function patchUser(id,body){
+    return axios.patch(`${API_URL}/users/${id}`,body, requestOptions.header())
 }
 
 // class UserService {
