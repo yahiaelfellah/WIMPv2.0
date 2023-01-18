@@ -16,7 +16,7 @@
         <el-tag class="ml-2" type="success" size="large">{{ userRole }}</el-tag>
       </article>
       <div id="content">
-        <AdminContent :cols="cols" :tableData="allUsers" />
+        <AdminContent :cols="cols" :tableData="allUsers" @refresh="getData" />
       </div>
       <!-- <el-tabs tab-position="right" style="height: 100%" class="demo-tabs" :stretch="true">
         <el-tab-pane label="States"><AdminContent /></el-tab-pane>
@@ -34,11 +34,9 @@
 <script>
 // import IFrame from "@/components/NodeRedIframe.vue"
 // import AdminContent from "@/components/AdminStatus.vue";
-import { userService } from "../services/user.service";
 import { AuthenticationService } from "../services/auth.service";
-import { ElNotification } from "element-plus";
 import { Role } from "../helpers/roles";
-import AdminContent from "../components/AdminContent.vue";
+import AdminContent from "../components/Admin/AdminContent.vue";
 // import Map  from '../components/MapboxComponent.vue'
 
 export default {
@@ -61,25 +59,10 @@ export default {
         (key) => Role[key] === this.currentUser.roles
       );
     },
-    cols() {
-      return this.allUsers && this.allUsers.length !== 0 ? Object.keys(this.allUsers[0]) : [];
-    },
+
   },
   mounted() {
-    userService
-      .getById(this.currentUser.userId)
-      .then((response) => (this.userFromApi = response.data))
-      .catch((err) => {
-        ElNotification({
-          title: "Error",
-          message: err,
-          type: "error",
-        });
-      });
-      userService.getAll().then((response) => {
-        this.allUsers = response.data
-      })
-},
+  },
   methods: {
     onLoad(frame) {
       this.myIframe = frame.contentWindow;

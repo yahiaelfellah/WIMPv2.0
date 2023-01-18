@@ -50,6 +50,7 @@ exports.findByUserName = (username) =>  {
 }
 
 exports.createIdentity = (userData) => {
+    console.log(userData);
     const user = new Identity(userData);
     return user.save();
 };

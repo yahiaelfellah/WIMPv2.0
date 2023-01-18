@@ -1,5 +1,6 @@
 const DeivceModel = require("../models/devices.model");
 const { sender } = require('../../messaging/device.messaging');
+const jwt = require("jsonwebtoken")
 
 /// This one will help to create the empty device with right flow
 exports.create = (req,res) => {

@@ -6,6 +6,10 @@ const deviceSchema = new Schema({
     userId: String,
     name : String, 
     type : String, 
+    img: {
+        data :Buffer, 
+        contentType : String,
+    },
     flowId : String,
 },{ timestamps: true })
 

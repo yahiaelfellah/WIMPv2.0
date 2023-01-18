@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BehaviorSubject } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
+import { handleErrorResponse } from '../helpers/handle-response';
 
 
 const API_URL = 'http://localhost:3000/api/v1';
@@ -17,7 +18,9 @@ export const AuthenticationService = {
   get currentTokensValue() { return currentAuthTokens.value}
 
 }
-
+axios.interceptors.response.use(response => { 
+  return response
+},handleErrorResponse)  
 
 async function login (user) {
   const response = await axios

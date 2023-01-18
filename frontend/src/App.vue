@@ -6,7 +6,7 @@
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
-import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+//import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 export default {
   name: "App",

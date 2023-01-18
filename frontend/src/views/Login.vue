@@ -51,7 +51,8 @@
 </template>
 <script>
 import { object, string } from "yup";
-import { ElNotification } from "element-plus";
+import { ElMessage } from 'element-plus'
+
 import { ElLoading } from "element-plus";
 import { AuthenticationService } from "../services/auth.service";
 
@@ -121,10 +122,10 @@ export default {
               this.loading.close();
               this.message =
                 (error.response && error.response.data) || error.message;
-              ElNotification({
-                title: "Error",
+              ElMessage({
                 message: this.message,
                 type: "error",
+                showClose: true
               });
             });
         })

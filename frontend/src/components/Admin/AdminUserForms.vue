@@ -108,8 +108,8 @@
 </template>
 <script >
 import { Plus } from "@element-plus/icons-vue";
-import { userService } from "../services/user.service";
-import { ElLoading,ElNotification } from "element-plus";
+import { userService } from "../../services/user.service";
+import { ElLoading,ElMessage } from "element-plus";
 
 export default {
   data() {
@@ -121,7 +121,7 @@ export default {
         password:"",
         birthday:"",
         date2:"",
-        permissionLevel: 1,
+        permissionLevel: null,
       },
       dialogFormVisible: false,
       wrapper: document.body,
@@ -213,14 +213,22 @@ export default {
             userService.create(this.form).then(() => { 
               this.loading.close();
               this.handleCancelOrClose();
+              ElMessage({
+                message: "New user created",
+                type: "success",
+                showClose: true
+
+              });
+              this.$emit('refresh')
+
             }).catch(error => { 
                this.loading.close();
               this.message =
                 (error.response && error.response.data) || error.message;
-              ElNotification({
-                title: "Error",
+              ElMessage({
                 message: this.message,
                 type: "error",
+                showClose: true
               });
             })
           } else {
