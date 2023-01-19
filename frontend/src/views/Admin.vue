@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-// import IFrame from "@/components/NodeRedIframe.vue"
+// import IFrame from "@/components/Cards/NodeRedIframeCard.vue"
 // import AdminContent from "@/components/AdminStatus.vue";
 import { AuthenticationService } from "../services/auth.service";
 import { Role } from "../helpers/roles";

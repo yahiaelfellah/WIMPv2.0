@@ -5,12 +5,13 @@ const Schema = mongoose.Schema;
 const deviceSchema = new Schema({
     userId: String,
     name : String, 
+    displayName : String,
+    version : Number,
     type : String, 
-    img: {
-        data :Buffer, 
-        contentType : String,
-    },
     flowId : String,
+    description : String, 
+    fromTemplate : Boolean 
+    
 },{ timestamps: true })
 
 deviceSchema.virtual('id').get(function() {

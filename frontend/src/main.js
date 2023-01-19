@@ -9,11 +9,13 @@ import Mapbox from "mapbox-gl";
 
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import VWave from 'v-wave'
 
 const vueApp = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   vueApp.component(key, component);
 }
+vueApp.use(VWave);
 vueApp.use(VueIframe);
 vueApp.use(VueFriendlyIframe);
 vueApp.use(VueMapbox, { mapboxgl: Mapbox });

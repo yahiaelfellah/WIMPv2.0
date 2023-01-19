@@ -5,17 +5,16 @@
         <template #header>
           <div class="card-header">
             <span>Devices</span>
+            <span class="card-title"> Click on device card for more infos</span>
           </div>
         </template>
         <el-scrollbar v-if="!isEmpty">
-          <el-skeleton
-            :loading="loading"
-            animated
-            :count="3"
-          >
-            <template #template>
+          <el-skeleton :loading="loading" animated  :count ="5" :throttle="500" >
+            <template #template >
+              <div id="skeleton-item">
               <el-skeleton-item
                 variant="image"
+                style="width: 200px; height: 200px"
               />
               <div style="padding: 14px">
                 <el-skeleton-item variant="h3" style="width: 50%" />
@@ -32,20 +31,37 @@
                   <el-skeleton-item variant="text" style="width: 30%" />
                 </div>
               </div>
+              </div>
+
+
             </template>
             <template #default>
+              <DeviceInfo :visible="infoVisible" @cancel="infoVisible = false"/> 
               <div class="scrollbar-flex-content">
                 <el-col :span="4" v-for="item in devices" :key="item">
-                  <el-card class="box-card">
-                    <el-avatar :icon="watch" color="#E5F3FE">
-                      <el-icon color="#409EFC" class="no-inherit" :size="50"
-                        ><Watch v-if="isWatch(item.type)"
-                      /></el-icon>
-                    </el-avatar>
+                  <el-card
+                    v-wave="{
+                      color: 'var(--el-color-primary)',
+                      startingOpacity: 0.5,
+                      easing: 'ease-in',
+                    }"
+                    class="box-card"
+                    shadow="hover"
+                    @click="infoVisible = true"
+                  >
+                    <el-avatar :icon="Watch" :size="50"></el-avatar>
+                    <!-- <el-icon color="#409EFC" class="no-inherit" :size="50"
+                      ><Watch v-if="isWatch(item.type)"
+                    /></el-icon> -->
                     <div class="card-value">{{ item.name }}</div>
                     <div class="card-title">{{ item.type }}</div>
-                    <div class="card-status">
+                    <!-- <div class="card-status">
                       <el-button type="primary" plain>Show flow</el-button>
+                    </div> -->
+                    <div class="card-status">
+                      <el-button type="danger" link style="padding: 1%"
+                        >Delete</el-button
+                      >
                     </div>
                   </el-card>
                 </el-col>
@@ -53,18 +69,19 @@
             </template>
           </el-skeleton>
         </el-scrollbar>
-        <el-empty v-if="isEmpty"> </el-empty>
       </el-card>
     </el-col>
   </el-row>
 </template>
 <script>
 import { deviceService } from "../../services/device.service";
+import DeviceInfo from "./AdminDeviceInfo.vue";
 import { Watch } from "@element-plus/icons-vue";
 
 export default {
   components: {
-    Watch,
+    // Watch,
+    DeviceInfo
   },
   computed: {
     isEmpty() {
@@ -73,12 +90,12 @@ export default {
   },
   methods: {
     getData() {
+      this.loading = true;
       deviceService.getAll().then((res) => {
         this.devices = res.data;
-        setTimeout(() => { 
-        this.loading = false;
-
-        },1000)
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       });
     },
     isWatch(type) {
@@ -87,29 +104,35 @@ export default {
   },
 
   mounted() {
+    this.devices = [];
     this.getData();
   },
   data() {
     return {
       devices: [],
-      watch: Watch,
-      loading : true
+      loading: true,
+      Watch,
+      infoVisible : false,
     };
   },
 };
 </script>
 <style>
-.container {
-  min-height: 32vh;
-  max-height: 32vh;
+#skeleton-container {
+  display: flex;
+  flex-direction: row;
 }
 .el-card__header {
   padding: calc(var(--el-card-padding) - 2px) var(--el-card-padding);
-  /* border-bottom: 1px solid var(--el-card-border-color); */
+  border-bottom: 0px solid var(--el-card-border-color) !important;
   box-sizing: border-box;
 }
 .scrollbar-flex-content {
   display: flex;
+}
+.el-skeleton {
+  display: flex;
+  justify-content: space-around;
 }
 .scrollbar-demo-item {
   flex-shrink: 0;
@@ -150,6 +173,7 @@ export default {
   font-weight: 500;
   font-size: 14px;
   margin-bottom: 10px;
+  font-style: italic;
 }
 .card-icon {
   width: 50px;
@@ -162,8 +186,12 @@ export default {
 .card-status {
   font-weight: 500;
   font-size: 14px;
+  padding: 1%;
 }
-
+.el-avatar--icon {
+  color: black !important;
+  font-size: 1.25rem;
+}
 @media (max-width: 600px) {
   body {
     height: auto;

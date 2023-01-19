@@ -5,7 +5,7 @@
 
   <el-drawer
     ref="drawerRef"
-    v-model="isVisible"
+    v-model="dialogFormVisible"
     :width="720"
     :before-close="handleCancelOrClose"
     :body-style="{ paddingBottom: '80px' }"
@@ -126,7 +126,7 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      required : true
+      default: false,
     },
   },
   data() {
@@ -140,7 +140,7 @@ export default {
         date2: "",
         permissionLevel: null,
       },
-      isVisible: false,
+      dialogFormVisible: false,
       wrapper: document.body,
       permission: [
         {
@@ -206,18 +206,22 @@ export default {
       },
       immediate: true,
     },
-    visible: function (n, o) {
-      this.isVisible = n;
-      console.log("Prop changed: ", n, " | was: ", o);
+    visible: {
+      handler: function (o, n) {
+        this.dialogFormVisible = n;
+        console.log(o);
+        console.log(n);
+      },
     },
   },
+  computed: {},
   methods: {
     resetForm() {
       this.$refs["ruleForm"].resetFields();
+      console.log(this.$refs["ruleForm"]);
     },
     handleCancelOrClose() {
       this.resetForm();
-      this.isVisible = false;
       this.$emit("onClose");
     },
     submitForm() {
@@ -251,6 +255,7 @@ export default {
               });
             });
         } else {
+          console.log("error submit!!");
           return false;
         }
       });
