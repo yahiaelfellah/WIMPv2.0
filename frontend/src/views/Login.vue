@@ -145,17 +145,15 @@ body {
   background-color: #f5f5f5;
   overflow: hidden;
 }
+.title {
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+}
 
 .logo {
   width: 150px;
   height: auto;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 20px;
-  margin-top: 0;
 }
 
 .credentials-form {

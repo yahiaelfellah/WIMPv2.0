@@ -23,10 +23,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 :root {
   --el-color-primary: #7325ef;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 * {
   margin: 0;
@@ -67,7 +71,7 @@ h3 {
   font-size: 15px;
 }
 
-header {
+/* header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -96,21 +100,10 @@ header svg path {
 
 header h1 {
   cursor: default;
-}
+} */
 
-button {
-  color: var(--main);
-  padding: 8px 35px;
-  transition: background-color 0.2s, color 0.2s;
-  border: 1px solid var(--main);
-  border-radius: 100px;
-  background-color: transparent;
-}
 
-button:hover {
-  background-color: var(--main);
-  color: var(--bg);
-}
+
 
 .select-box h2 {
   margin-right: 10px;
@@ -135,7 +128,6 @@ input {
 .pntr:hover {
   cursor: pointer;
 }
-
 .relative-footer {
   position: relative;
   bottom: 0;

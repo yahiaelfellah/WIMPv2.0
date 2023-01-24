@@ -1,6 +1,7 @@
 // const IdentityProvider = require('./controllers/identity.provider');
 //const config = require('../env.config');
 const IdentityProvider = require('./controllers/indentity.provider');
+const DepartementProvider = require('./controllers/departement.provider');
 const AuthorizationPermission = require('../security/authorization/authorization.permission');
 const config = require('../security/env.config');
 const Surfer = config.permissionLevels.Surfer;
@@ -11,6 +12,7 @@ exports.routesConfig = (app) => {
         IdentityProvider.insert
     ]);
     app.get('/users', [
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         IdentityProvider.list
     ]);
     app.get('/users/:userId', [
@@ -46,9 +48,14 @@ exports.routesConfig = (app) => {
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.removeById
     ]);
-    app.get('/users/userId/meetings',[
+    app.get('/users/:userId/meetings',[
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.sameUserCantDoThisAction,
         
+    ])
+
+    app.get('/departement', [
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        DepartementProvider.list
     ])
 };

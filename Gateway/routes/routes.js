@@ -43,6 +43,18 @@ exports.routes = [
         }
     },
     {
+        url:`/${API_PREFIX}/departement`,
+        authenticationRequired:true, // if a user needs to be authenticationRequiredenticated for accessing this endpoint
+        proxy: {
+            // contains information about the target to which the request should be redirected
+            target:"http://[::1]:3001/departement",
+            changeOrigin : true,
+            pathRewrite: {
+                [`^/${API_PREFIX}/departement`]: '',
+            },
+        }
+    },
+    {
         url:`/${API_PREFIX}/flow`,
         authenticationRequired:true, // if a user needs to be authenticated for accessing this endpoint
         proxy: {

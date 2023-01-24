@@ -10,10 +10,21 @@
           <template #header>
             <div class="card-header">
               <!-- <el-button type="success" round>New User</el-button> -->
-              <el-button @click="() => dialogFormVisible = true" round
+              <el-button
+                color="#7325ef"
+                plain
+                round
+                @click="() => dialogFormVisible = true"
                 ><el-icon><Plus /></el-icon> Add
               </el-button>
-              <UserForm :visible="dialogFormVisible" @close="dialogFormVisible = false" @refresh="getData()" />
+              <!-- <span class="card-title">
+                Click on device card for more infos</span
+              > -->
+              <UserForm
+                :visible="dialogFormVisible"
+                @close="dialogFormVisible = false"
+                @refresh="getData()"
+              />
             </div>
           </template>
           <el-table
@@ -201,11 +212,6 @@ export default {
 };
 </script>
 <style>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .el-row {
   margin-bottom: 20px;
 }

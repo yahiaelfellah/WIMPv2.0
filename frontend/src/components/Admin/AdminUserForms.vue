@@ -6,25 +6,27 @@
   <el-drawer
     ref="drawerRef"
     v-model="isVisible"
-    :width="720"
+    size="35%"
     :before-close="handleCancelOrClose"
     :body-style="{ paddingBottom: '80px' }"
     direction="rtl"
     class="demo-drawer"
   >
     <div class="drawer-content">
-      <el-row :gutter="24" class="title">
+      <el-row :gutter="24" id="title">
         <h2>New Entry</h2>
       </el-row>
-      <el-row :gutter="24" class="title">
-        <p style="font-style: italic">Add the new user to the system</p>
+      <el-row :gutter="24" id="title" class="card-title">
+        <p>Add a new user to the system</p>
       </el-row>
       <el-form
         ref="ruleForm"
         :model="form"
         :rules="rules"
         status-icon
-        label-width="120px"
+        label-width="150px"
+        label-position="left"
+        style="max-width: 700px; margin: 7%"
       >
         <el-form-item label="First name" prop="firstName" required>
           <el-col :span="12">
@@ -53,17 +55,34 @@
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="Password" prop="password" required>
+        <el-space fill>
+          <el-alert type="info" show-icon :closable="false">
+            <p>
+              "Password" value is automatically generated and attached to the
+              input:
+            </p>
+          </el-alert>
+          <el-form-item label="Password" prop="password" required>
+            <el-col :span="12">
+              <el-input
+                v-model="form.password"
+                autocomplete="off"
+                placeholder="Auto generated password"
+              />
+            </el-col>
+          </el-form-item>
+        </el-space>
+
+        <el-form-item label="User type" prop="type" required>
           <el-col :span="12">
-            <el-input
-              v-model="form.password"
-              autocomplete="off"
-              placeholder="Auto generated password"
-            />
+            <el-radio-group v-model="form.type">
+              <el-radio label="Teacher" />
+              <el-radio label="Student" />
+            </el-radio-group>
           </el-col>
         </el-form-item>
-        <el-form-item label="Activity time" required>
-          <el-col :span="11">
+        <el-form-item label="Birthday" required>
+          <el-col :span="12">
             <el-form-item prop="date1">
               <el-date-picker
                 v-model="form.date1"
@@ -74,25 +93,53 @@
               />
             </el-form-item>
           </el-col>
-          <el-col class="text-center" :span="2">
-            <span class="text-gray-500">-</span>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item prop="date2">
-              <el-time-picker
-                v-model="form.date2"
-                label="Pick a time"
-                placeholder="Pick a time"
-                style="width: 100%"
-              />
-            </el-form-item>
-          </el-col>
         </el-form-item>
+        <el-space fill>
+          <el-alert type="info" show-icon :closable="false">
+            <p
+              style="text-align: initial;"
+            >
+              You must specify 'Departement' label on the individal inputs.<br>The
+              label will be created in the system so will be shown in the
+              dropdown.
+            </p>
+          </el-alert>
+          <el-form-item label="Departement" prop="departement">
+            <el-col :span="12">
+              <el-select-v2
+                v-model="form.departement"
+                :options="departementOptions"
+                placeholder="Please select"
+                style="width: 100%"
+                :remote-method="getDapartement"
+                allow-create
+                filterable
+                clearable
+              />
+            </el-col>
+          </el-form-item>
+        </el-space>
+
         <el-form-item label="Permission Level" prop="permissionLevel">
           <el-col :span="12">
             <el-select v-model="form.permissionLevel">
               <el-option
-                v-for="item in permission"
+                v-for="item in permissionOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                :reserve-keyword="false"
+                style="width: 100%"
+                placeholder="Choose permission level"
+                allow-create
+                default-first-option
+              >
+              </el-option>
+            </el-select>
+
+            <!-- <el-select v-model="form.permissionLevel">
+              <el-option
+                v-for="item in permissionOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -102,7 +149,7 @@
                 placeholder="Choose permission level"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
           </el-col>
         </el-form-item>
       </el-form>
@@ -120,13 +167,14 @@
 </template>
 <script >
 import { userService } from "../../services/user.service";
+import { departementService } from "../../services/departement.service";
 import { ElLoading, ElMessage } from "element-plus";
 
 export default {
   props: {
     visible: {
       type: Boolean,
-      required : true
+      required: true,
     },
   },
   data() {
@@ -139,9 +187,13 @@ export default {
         birthday: "",
         date2: "",
         permissionLevel: null,
+        type: "Teacher",
+        departement: null,
       },
       isVisible: false,
       wrapper: document.body,
+      permissionOptions: [],
+      departementOptions: [],
       permission: [
         {
           value: 1,
@@ -210,10 +262,23 @@ export default {
       this.isVisible = n;
       console.log("Prop changed: ", n, " | was: ", o);
     },
+    "form.type": {
+      handler: function () {
+        this.permissionOptions = this.changePermissions();
+        console.log(this.permissionOptions);
+      },
+      immediate: true,
+    },
   },
+  computed: {},
   methods: {
     resetForm() {
       this.$refs["ruleForm"].resetFields();
+    },
+    changePermissions() {
+      return this.form.type === "Teacher" || this.form.type === null
+        ? this.permission
+        : [this.permission[0]];
     },
     handleCancelOrClose() {
       this.resetForm();
@@ -255,14 +320,18 @@ export default {
         }
       });
     },
+    getDapartement() {
+      this.departementOptions = departementService.getAll();
+    },
   },
 };
 </script>
 <style>
-.title {
+#title {
   margin: 5%;
   display: flex;
   justify-content: center;
+  font-size: 14px;
 }
 .el-button--text {
   margin-right: 15px;
@@ -275,5 +344,8 @@ export default {
 }
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+.el-select-v2__placeholder {
+  display: flex;
 }
 </style>

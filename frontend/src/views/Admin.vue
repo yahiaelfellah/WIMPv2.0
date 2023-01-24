@@ -1,34 +1,28 @@
 <template>
   <div id="profile">
-    <header>
-      <img class="logo" :src="require('../assets/logo.svg')" />
-      <h1>WIMP</h1>
-      <button id="logout-btn" class="pntr" @click="handleLogout">Logout</button>
-    </header>
-    <!-- <IFrame /> -->
-    <section id="main">
-      <article>
-        <el-avatar
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          size="large"
-        />
-        <h1>{{ capitalizeFirstLetter(userFromApi?.firstName) }}</h1>
-        <el-tag class="ml-2" type="success" size="large">{{ userRole }}</el-tag>
-      </article>
-      <div id="content">
-        <AdminContent :cols="cols" :tableData="allUsers" @refresh="getData" />
-      </div>
-      <!-- <el-tabs tab-position="right" style="height: 100%" class="demo-tabs" :stretch="true">
-        <el-tab-pane label="States"><AdminContent /></el-tab-pane>
-        <el-tab-pane label="Config">Config</el-tab-pane>
-        <el-tab-pane label="Role">Role</el-tab-pane>
-        <el-tab-pane label="Task">Task</el-tab-pane>
-      </el-tabs> -->
-      <!-- <Map /> -->
-    </section>
-    <footer class="fixed-footer">
-      <h3>&copy; 2022 wimp</h3>
-    </footer>
+    <div class="common-layout">
+      <el-header>
+        <Header />
+      </el-header>
+      <el-main>
+        <article>
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            size="large"
+          />
+          <h1>{{ capitalizeFirstLetter(userFromApi?.firstName) }}</h1>
+          <el-tag class="ml-2" type="success" size="large">{{
+            userRole
+          }}</el-tag>
+        </article>
+        <div id="content">
+          <AdminContent :cols="cols" :tableData="allUsers" @refresh="getData" />
+        </div>
+      </el-main>
+      <el-footer>
+        <h3>&copy; 2022 wimp</h3>
+      </el-footer>
+    </div>
   </div>
 </template>
 <script>
@@ -37,6 +31,7 @@
 import { AuthenticationService } from "../services/auth.service";
 import { Role } from "../helpers/roles";
 import AdminContent from "../components/Admin/AdminContent.vue";
+import Header from '../components/Common/HeaderComponent.vue';
 // import Map  from '../components/MapboxComponent.vue'
 
 export default {
@@ -46,11 +41,12 @@ export default {
     // AdminContent,
     // Map,
     AdminContent,
+    Header
   },
   data: () => ({
     myIframe: null,
     currentUser: AuthenticationService.currentUserValue,
-    allUsers : null,
+    allUsers: null,
     userFromApi: null,
   }),
   computed: {
@@ -59,10 +55,8 @@ export default {
         (key) => Role[key] === this.currentUser.roles
       );
     },
-
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     onLoad(frame) {
       this.myIframe = frame.contentWindow;
@@ -82,7 +76,13 @@ export default {
   --el-color-primary: #7325ef;
 }
 #content {
-  padding: 2%;
+  padding: 0% 2%;
+  width: 100%;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 .el-tabs--right .el-tabs__header.is-right {
   margin-right: 3%;
@@ -93,7 +93,7 @@ export default {
   flex-flow: column;
   align-items: center;
   justify-content: space-around;
-  height: 14vh;
+  height: 11vh;
 }
 #profile article img {
   border-radius: 100px;

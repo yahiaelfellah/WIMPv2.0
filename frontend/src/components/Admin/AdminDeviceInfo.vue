@@ -5,13 +5,18 @@
     direction="rtl"
     size="50%"
   >
-    <IFrame />
+    <!-- <IFrame /> -->
+    <iframe :src="src" :id="uuid" class="myIfr" frameborder="0"></iframe>
   </el-drawer>
 </template>
 <script>
-import IFrame from "@/components/Cards/NodeRedIframeCard.vue";
+import { uuid } from "vue-uuid";
 export default {
   props: {
+    src: {
+      type: String,
+      required: true,
+    },
     visible: {
       type: Boolean,
       required: true,
@@ -20,20 +25,29 @@ export default {
       type: Object,
     },
   },
-  component: {
-    IFrame,
-  },
-  watch : { 
-    visible : function(n,o)  { 
-        this.isVisible = n ;
-        console.log("Prop changed: ", n, " | was: ", o);
 
-    }
+  watch: {
+    visible: function (n, o) {
+      this.isVisible = n;
+      console.log("Prop changed: ", n, " | was: ", o);
+    },
+    src: function (n, o) {
+      // const el = document.getElementById("myIfr");
+      // console.log(el);
+      console.log("Prop changed: ", n, " | was: ", o);
+      // if (el) {
+      //   document.getElementById("myIfr").src =
+      //     document.getElementById("myIfr").src;
+
+      // }
+    },
   },
+
   data() {
     return {
       myIframe: null,
       isVisible: false,
+      uuid: uuid.v1(),
     };
   },
   methods: {
@@ -44,5 +58,16 @@ export default {
       this.myIframe = frame.contentWindow;
     },
   },
+  unmounted() {
+    console.log("Child unmounted()");
+  },
 };
 </script>
+<style>
+.myIfr {
+  width: 100%;
+  height: 500px;
+  border: 0px;
+  border-radius: 3px;
+}
+</style>

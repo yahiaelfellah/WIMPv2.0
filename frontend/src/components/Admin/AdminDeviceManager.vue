@@ -4,41 +4,40 @@
       <el-card class="box-card container">
         <template #header>
           <div class="card-header">
-            <span>Devices</span>
             <span class="card-title"> Click on device card for more infos</span>
           </div>
         </template>
         <el-scrollbar v-if="!isEmpty">
-          <el-skeleton :loading="loading" animated  :count ="5" :throttle="500" >
-            <template #template >
+          <el-skeleton :loading="loading" animated :count="5" :throttle="500">
+            <template #template>
               <div id="skeleton-item">
-              <el-skeleton-item
-                variant="image"
-                style="width: 200px; height: 200px"
-              />
-              <div style="padding: 14px">
-                <el-skeleton-item variant="h3" style="width: 50%" />
-                <div
-                  style="
-                    display: flex;
-                    align-items: center;
-                    justify-items: space-between;
-                    margin-top: 16px;
-                    height: 16px;
-                  "
-                >
-                  <el-skeleton-item variant="text" style="margin-right: 16px" />
-                  <el-skeleton-item variant="text" style="width: 30%" />
+                <el-skeleton-item
+                  variant="image"
+                  style="width: 200px; height: 200px"
+                />
+                <div style="padding: 14px">
+                  <el-skeleton-item variant="h3" style="width: 50%" />
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-items: space-between;
+                      margin-top: 16px;
+                      height: 16px;
+                    "
+                  >
+                    <el-skeleton-item
+                      variant="text"
+                      style="margin-right: 16px"
+                    />
+                    <el-skeleton-item variant="text" style="width: 30%" />
+                  </div>
                 </div>
               </div>
-              </div>
-
-
             </template>
             <template #default>
-              <DeviceInfo :visible="infoVisible" @cancel="infoVisible = false"/> 
               <div class="scrollbar-flex-content">
-                <el-col :span="4" v-for="item in devices" :key="item">
+                <el-col :span="4" v-for="(item, i) in devices" :key="item">
                   <el-card
                     v-wave="{
                       color: 'var(--el-color-primary)',
@@ -47,7 +46,7 @@
                     }"
                     class="box-card"
                     shadow="hover"
-                    @click="infoVisible = true"
+                    @click="infoVisibles[i] = true"
                   >
                     <el-avatar :icon="Watch" :size="50"></el-avatar>
                     <!-- <el-icon color="#409EFC" class="no-inherit" :size="50"
@@ -64,6 +63,11 @@
                       >
                     </div>
                   </el-card>
+                  <DeviceInfo
+                    :visible="infoVisibles[i]"
+                    :src="srcs[i]"
+                    @cancel="infoVisibles[i] = false"
+                  />
                 </el-col>
               </div>
             </template>
@@ -81,7 +85,7 @@ import { Watch } from "@element-plus/icons-vue";
 export default {
   components: {
     // Watch,
-    DeviceInfo
+    DeviceInfo,
   },
   computed: {
     isEmpty() {
@@ -101,6 +105,14 @@ export default {
     isWatch(type) {
       return type === "watch";
     },
+    getSource(index) {
+      if (index === 0) {
+        return "http://127.0.0.1:8000/red/#flow/43cfa3f5.540a8c";
+      }
+      if (index === 1) {
+        return "http://127.0.0.1:8000/red/#flow/940cf029.f22d9";
+      }
+    },
   },
 
   mounted() {
@@ -112,7 +124,16 @@ export default {
       devices: [],
       loading: true,
       Watch,
-      infoVisible : false,
+      index: 0,
+      srcs : [
+        "http://127.0.0.1:8000/red/#flow/43cfa3f5.540a8c",
+        "http://127.0.0.1:8000/red/#flow/940cf029.f22d9"
+
+      ],
+      infoVisibles : [
+        false,
+        false,
+      ]
     };
   },
 };
@@ -121,6 +142,12 @@ export default {
 #skeleton-container {
   display: flex;
   flex-direction: row;
+}
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
 }
 .el-card__header {
   padding: calc(var(--el-card-padding) - 2px) var(--el-card-padding);
@@ -172,8 +199,8 @@ export default {
   color: #949ea1;
   font-weight: 500;
   font-size: 14px;
-  margin-bottom: 10px;
   font-style: italic;
+  margin-top: 0.4%
 }
 .card-icon {
   width: 50px;

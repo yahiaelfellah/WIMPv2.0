@@ -108,12 +108,6 @@ export default {
   color: #2d2f38;
   padding: 20px;
 }
-.card-title {
-  color: #949ea1;
-  font-weight: 500;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
 .card-icon {
   width: 50px;
   height: 50px;

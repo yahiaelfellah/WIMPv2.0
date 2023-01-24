@@ -25,6 +25,7 @@
     "rxjs": "^7.5.7",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.5",
+    "uuidv4": "^6.2.13",
     "v-wave": "^1.5.0",
     "vee-validate": "^4.7.3",
     "vue": "^3.2.44",
@@ -32,6 +33,7 @@
     "vue-friendly-iframe": "^0.20.0",
     "vue-iframes": "^0.0.20",
     "vue-router": "^4.1.6",
+    "vue-uuid": "^3.0.0",
     "vuex": "^4.0.2",
     "yup": "^0.32.11"
   },

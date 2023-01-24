@@ -5,39 +5,31 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env' )});
 mongoose.connect(process.env.mongoDbUrl,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
-const identiySchema = new Schema({
-    firstName: String,
-    lastName: String,
-    email: String,
-    birthday: Date,
-    userName:String,
-    password: String,
-    permissionLevel: Number,
-    depqrtement : String,
-    devices:Array,
-    flows: Array
+
+const departementSchema = new Schema({
+    name: String,
 },{ timestamps: true });
 
-identiySchema.virtual('id').get(function () {
+departementSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
 // Ensure virtual fields are serialised.
-identiySchema.set('toJSON', {
+departementSchema.set('toJSON', {
     virtuals: true
 });
 
-identiySchema.findById = function (cb) {
+departementSchema.findById = function (cb) {
     return this.model('Users').find({id: this.id}, cb);
 };
 
-const Identity = mongoose.model('Users', identiySchema);
+const Departement = mongoose.model('Departement', departementSchema);
 
 exports.findByEmail = (email) => {
-    return Identity.find({email: email});
+    return Departement.find({email: email});
 };
 exports.findById = (id) => {
-    return Identity.findById(id)
+    return Departement.findById(id)
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -47,18 +39,17 @@ exports.findById = (id) => {
 };
 
 exports.findByUserName = (username) =>  {
-    return Identity.find({userName:username})
+    return Departement.find({userName:username})
 }
 
-exports.createIdentity = (userData) => {
-    console.log(userData);
-    const user = new Identity(userData);
-    return user.save();
+exports.createDepartement = (userData) => {
+    const dep = new Departement(userData);
+    return dep.save();
 };
 
 exports.list = (perPage, page) => {
     return new Promise((resolve, reject) => {
-        Identity.find()
+        Departement.find()
             .limit(perPage)
             .skip(perPage * page)
             .exec(function (err, users) {
@@ -73,7 +64,7 @@ exports.list = (perPage, page) => {
 
 exports.putIdentity = (id,identityData) => {
     return new Promise((resolve, reject) => {
-        Identity.findByIdAndUpdate(id,identityData,function (err,user) {
+        Departement.findByIdAndUpdate(id,identityData,function (err,user) {
             if (err) reject(err);
             resolve(user);
         });
@@ -82,7 +73,7 @@ exports.putIdentity = (id,identityData) => {
 
 exports.patchIdentityFlows = (id,flow) => {
     return new Promise((resolve,reject)=> {
-        Identity.findById(id,function(err,user){
+        Departement.findById(id,function(err,user){
             if(err) reject(err);
             user.flows.push(flow);
             user.save(function(err,updates){
@@ -95,7 +86,7 @@ exports.patchIdentityFlows = (id,flow) => {
 
 exports.patchIdentityDevices = (id ,device) => {
     return new Promise((resolve,reject) => {
-        Identity.findById(id, function(err,user) {
+        Departement.findById(id, function(err,user) {
             if(err) reject(err);
             user.devices.push(device);
             user.save(function(err,updates){
@@ -109,7 +100,7 @@ exports.patchIdentityDevices = (id ,device) => {
 
 exports.patchIdentity = (id, userData) => {
     return new Promise((resolve, reject) => {
-        Identity.findById(id, function (err, user) {
+        Departement.findById(id, function (err, user) {
             if (err) reject(err);
             let actualPermisssion = user.permissionLevel;
             for (let i in userData) {
@@ -127,7 +118,7 @@ exports.patchIdentity = (id, userData) => {
 
 exports.removeById = (userId) => {
     return new Promise((resolve, reject) => {
-        Identity.remove({_id: userId}, (err) => {
+        Departement.remove({_id: userId}, (err) => {
             if (err) {
                 reject(err);
             } else {
