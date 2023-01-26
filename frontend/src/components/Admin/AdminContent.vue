@@ -1,76 +1,84 @@
 <template>
   <div>
-    <el-divider content-position="left" style="font-weight: bold">
-      <el-icon><User /></el-icon> User Management</el-divider
-    >
+    <transition name="el-fade-in-linear">
+      <el-divider
+        v-show="show"
+        content-position="left"
+        style="font-weight: bold"
+      >
+        <el-icon><User /></el-icon> User Management</el-divider
+      >
+    </transition>
 
     <el-row :gutter="20">
       <el-col :span="16">
-        <el-card>
-          <template #header>
-            <div class="card-header">
-              <!-- <el-button type="success" round>New User</el-button> -->
-              <el-button
-                color="#7325ef"
-                plain
-                round
-                @click="() => dialogFormVisible = true"
-                ><el-icon><Plus /></el-icon> Add
-              </el-button>
-              <!-- <span class="card-title">
+        <transition name="el-fade-in-linear">
+          <el-card v-show="show">
+            <template #header>
+              <div class="card-header">
+                <!-- <el-button type="success" round>New User</el-button> -->
+                <el-button
+                  color="#7325ef"
+                  plain
+                  round
+                  @click="() => (dialogFormVisible = true)"
+                  ><el-icon><Plus /></el-icon> Add
+                </el-button>
+                <!-- <span class="card-title">
                 Click on device card for more infos</span
               > -->
-              <UserForm
-                :visible="dialogFormVisible"
-                @close="dialogFormVisible = false"
-                @refresh="getData()"
-              />
-            </div>
-          </template>
-          <el-table
-            :data="tableData"
-            style="width: 100%"
-            max-height="250"
-            highlight-current-row
-            @current-change="handleCurrentChange"
-          >
-            <el-table-column label="First name" prop="firstName" />
-
-            <el-table-column label="Last name" prop="lastName" />
-            <el-table-column label="Email" prop="email" />
-
-            <el-table-column label="Permisssion" prop="permissionLevel">
-              <template #default="scope">
-                <el-tag class="ml-2" type="danger">{{
-                  userRole(scope.row.permissionLevel)
-                }}</el-tag>
-              </template>
-            </el-table-column>
-
-            <template #header>
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="Type to search"
-              />
+                <UserForm
+                  :visible="dialogFormVisible"
+                  @close="dialogFormVisible = false"
+                  @refresh="getData()"
+                />
+              </div>
             </template>
-            <el-table-column label="Operations">
-              <template #default="scope">
-                <el-button
-                  size="small"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >Edit</el-button
-                >
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >Delete</el-button
-                >
+            <el-table
+              :data="tableData"
+              style="width: 100%"
+              max-height="250"
+              highlight-current-row
+              @current-change="handleCurrentChange"
+            >
+              <el-table-column label="First name" prop="firstName" />
+
+              <el-table-column label="Last name" prop="lastName" />
+              <el-table-column label="Email" prop="email" />
+
+              <el-table-column label="Permisssion" prop="permissionLevel">
+                <template #default="scope">
+                  <el-tag class="ml-2" type="danger">{{
+                    userRole(scope.row.permissionLevel)
+                  }}</el-tag>
+                </template>
+              </el-table-column>
+
+              <template #header>
+                <el-input
+                  v-model="search"
+                  size="mini"
+                  placeholder="Type to search"
+                />
               </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
+              <el-table-column label="Operations">
+                <template #default="scope">
+                  <el-button
+                    size="small"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    >Edit</el-button
+                  >
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)"
+                    >Delete</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </transition>
       </el-col>
       <el-col :span="8">
         <!-- <el-card>
@@ -113,12 +121,20 @@
       </el-card> -->
       </el-col>
     </el-row>
-    <el-divider content-position="left" style="font-weight: bold">
-      <el-icon><Cellphone /></el-icon> Device Management</el-divider
-    >
-    <div>
-      <DeviceManager />
-    </div>
+    <transition name="el-fade-in-linear">
+      <el-divider
+        v-show="show"
+        content-position="left"
+        style="font-weight: bold"
+      >
+        <el-icon><Cellphone /></el-icon> Device Management</el-divider
+      >
+    </transition>
+    <transition name="el-fade-in-linear">
+      <div v-show="show">
+        <DeviceManager />
+      </div>
+    </transition>
   </div>
 
   <!-- <el-row :gutter="20">
@@ -147,6 +163,7 @@ export default {
       activateSmartPlug: false,
       tableData: [],
       dialogFormVisible: false,
+      show: false,
     };
   },
   components: {
@@ -159,6 +176,9 @@ export default {
 
   mounted() {
     this.getData();
+    setTimeout(() => {
+      this.show = !this.show;
+    }, 300);
     // userService.getAll().then((response) => {
     //         this.allUsers = response.data
     //       })

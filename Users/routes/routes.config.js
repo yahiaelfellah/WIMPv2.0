@@ -5,6 +5,7 @@ const DepartementProvider = require('./controllers/departement.provider');
 const AuthorizationPermission = require('../security/authorization/authorization.permission');
 const config = require('../security/env.config');
 const Surfer = config.permissionLevels.Surfer;
+const Member = config.permissionLevels.Member;
 
 exports.routesConfig = (app) => {
     app.post('/users', [
@@ -57,5 +58,9 @@ exports.routesConfig = (app) => {
     app.get('/departement', [
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         DepartementProvider.list
+    ])
+    app.post('/departement',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Member),
+        DepartementProvider.insert
     ])
 };

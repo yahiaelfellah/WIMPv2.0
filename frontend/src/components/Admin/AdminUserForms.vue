@@ -81,11 +81,11 @@
             </el-radio-group>
           </el-col>
         </el-form-item>
-        <el-form-item label="Birthday" required>
+        <el-form-item label="Birthday" prop="birthday" required>
           <el-col :span="12">
-            <el-form-item prop="date1">
+            <el-form-item prop="birthday">
               <el-date-picker
-                v-model="form.date1"
+                v-model="form.birthday"
                 type="date"
                 label="Pick a date"
                 placeholder="Pick a date"
@@ -96,10 +96,8 @@
         </el-form-item>
         <el-space fill>
           <el-alert type="info" show-icon :closable="false">
-            <p
-              style="text-align: initial;"
-            >
-              You must specify 'Departement' label on the individal inputs.<br>The
+            <p style="text-align: initial">
+              You must specify 'Departement' label on the individal inputs.<br />The
               label will be created in the system so will be shown in the
               dropdown.
             </p>
@@ -111,7 +109,7 @@
                 :options="departementOptions"
                 placeholder="Please select"
                 style="width: 100%"
-                :remote-method="getDapartement"
+                @change="CreateDepartementIfNotExit"
                 allow-create
                 filterable
                 clearable
@@ -183,7 +181,7 @@ export default {
         firstName: "",
         lastName: "",
         email: "",
-        password: "",
+        password: Math.random().toString(36).slice(2).toString(),
         birthday: "",
         date2: "",
         permissionLevel: null,
@@ -250,14 +248,11 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getDapartement();
+  },
   components: {},
   watch: {
-    "form.firstName": {
-      handler: function () {
-        this.form.password = Math.random().toString(36).slice(2).toString();
-      },
-      immediate: true,
-    },
     visible: function (n, o) {
       this.isVisible = n;
       console.log("Prop changed: ", n, " | was: ", o);
@@ -270,7 +265,6 @@ export default {
       immediate: true,
     },
   },
-  computed: {},
   methods: {
     resetForm() {
       this.$refs["ruleForm"].resetFields();
@@ -293,6 +287,7 @@ export default {
       });
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
+          this.CreateDepartementIfNotExit()
           userService
             .create(this.form)
             .then(() => {
@@ -320,8 +315,26 @@ export default {
         }
       });
     },
+    CreateDepartementIfNotExit() {
+      if (
+       !this.departementOptions
+          .map((o) => o.label)
+          .includes(this.form.departement)
+      ) {
+        console.log("creating new departement");
+        departementService
+          .create({
+            name: this.form.departement,
+          })
+          .then((res) => console.log(res.data));
+      }
+    },
     getDapartement() {
-      this.departementOptions = departementService.getAll();
+      departementService.getAll().then((res) => {
+        this.departementOptions = res.data.map((o) => {
+          return { value: `${o.name}`, label: `${o.name}` };
+        });
+      });
     },
   },
 };
@@ -332,6 +345,10 @@ export default {
   display: flex;
   justify-content: center;
   font-size: 14px;
+}
+.el-space {
+    display: flex;
+    vertical-align: top;
 }
 .el-button--text {
   margin-right: 15px;

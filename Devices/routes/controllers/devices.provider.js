@@ -1,10 +1,10 @@
-const DeivceModel = require("../models/devices.model");
+const DeviceModel = require("../models/devices.model");
 const { sender } = require('../../messaging/device.messaging');
 const jwt = require("jsonwebtoken")
 
 /// This one will help to create the empty device with right flow
 exports.create = (req,res) => {
-    DeivceModel.create(req.body).then((result) => {
+    DeviceModel.create(req.body).then((result) => {
         res.status(201).send({id:result._id})
         // Data To Send to The Flow Microservice 
         /* e.g  data = {
@@ -38,7 +38,7 @@ exports.insert = (req,res) => {
             page = Number.isInteger(req.query.page) ?req.query.page:0;
         }
     }
-    DeivceModel.list(limit,page).then((result) => {
+    DeviceModel.list(limit,page).then((result) => {
         res.status(200).send(result);
     })
 }
@@ -50,13 +50,19 @@ exports.findById = (req,res) => {
 }
 
 exports.findByFlowId = (req,res) => {
-    DeivceModel.findByflowId(req.params.flowId).then((result) =>{
+    DeviceModel.findByflowId(req.params.flowId).then((result) =>{
         res.status(200).send(result);
     })
 }
 
 exports.removeById = (req,res) => {
     DeviceModel.removeById(req.params.deviceId).then((result) => {
+        res.status(200).send(result);
+    })
+}
+
+exports.updateById =  (req,res) => { 
+    DeviceModel.putDevice(req.params.deviceId).then((result) => { 
         res.status(200).send(result);
     })
 }

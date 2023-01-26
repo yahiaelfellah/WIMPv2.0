@@ -66,6 +66,7 @@
                   <DeviceInfo
                     :visible="infoVisibles[i]"
                     :src="srcs[i]"
+                    :device="item"
                     @cancel="infoVisibles[i] = false"
                   />
                 </el-col>

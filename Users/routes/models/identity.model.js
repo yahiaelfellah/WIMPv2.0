@@ -13,7 +13,7 @@ const identiySchema = new Schema({
     userName:String,
     password: String,
     permissionLevel: Number,
-    depqrtement : String,
+    departement : String,
     devices:Array,
     flows: Array
 },{ timestamps: true });

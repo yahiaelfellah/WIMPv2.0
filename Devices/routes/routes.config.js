@@ -6,7 +6,7 @@ exports.routesConfig = (app) => {
         DeviceProvider.create
     ]);
     app.put('/devices/:deviceId', [
-        DeviceProvider.insert
+        DeviceProvider.updateById
     ])
     app.get('/devices', [
         DeviceProvider.list

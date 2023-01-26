@@ -69,7 +69,7 @@ exports.list = (perPage, page) => {
 
 exports.patchDeviceFlowId = (id, data) => {
     return new Promise((resolve,reject) => {
-        DeviceModel.findById(id, function(err,device) {
+        Device.findById(id, function(err,device) {
             if(err) reject(err);
             device.flowId = data;
             device.save(function(err,update){
@@ -80,9 +80,9 @@ exports.patchDeviceFlowId = (id, data) => {
     })
 }
 
-exports.putDevice = (id,deviceData) => {
+exports.putDevice = (id,device) => {
     return new Promise((resolve, reject) => {
-        Device.findByIdAndUpdate(id,deviceData,function (err,device) {
+        Device.findByIdAndUpdate({ _id: id },device,function (err,device) {
             if (err) reject(err);
             resolve(device);
         });
