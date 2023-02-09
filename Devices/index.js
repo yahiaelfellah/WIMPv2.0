@@ -43,4 +43,4 @@ app.on('error',(error) => {
 
 /// Connection to the RabbitMQ broker 
 /// Listen to the data sent by other ms
-/// consumer()
+consumer()

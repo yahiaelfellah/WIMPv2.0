@@ -63,7 +63,10 @@ exports.consumer = async () => {
             const rc = JSON.parse(msg.content.toString())
             switch(rc.action){
                 case "new_flow":
+                    
                     flow
+                    console.log("new flow message has been received");
+                break;
             //     case "patch_device": 
             //         //flowModel.patchIdentityFlows(rc.data.id, rc.data.body)
             //         break;

@@ -5,106 +5,94 @@
 
   <el-drawer
     ref="drawerRef"
-    v-model="dialogFormVisible"
-    :width="720"
+    v-model="isVisible"
+    size="35%"
     :before-close="handleCancelOrClose"
     :body-style="{ paddingBottom: '80px' }"
     direction="rtl"
     class="demo-drawer"
   >
     <div class="drawer-content">
-      <el-row :gutter="24" class="title">
+      <el-row :gutter="24" id="title">
         <h2>New Entry</h2>
       </el-row>
-      <el-row :gutter="24" class="title">
-        <p style="font-style: italic">Add the new user to the system</p>
+      <el-row :gutter="24" id="title" class="card-title">
+        <p>Add a new device to the system</p>
       </el-row>
       <el-form
         ref="ruleForm"
         :model="form"
         :rules="rules"
         status-icon
-        label-width="120px"
+        label-width="150px"
+        label-position="left"
+        style="max-width: 700px; margin: 7%"
       >
-        <el-form-item label="First name" prop="firstName" required>
+        <el-form-item label="Device Name" prop="name" required>
           <el-col :span="12">
             <el-input
-              v-model="form.firstName"
+              v-model="form.name"
               autocomplete="off"
               placeholder="Please input"
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="Last name" prop="lastName" required>
+        <el-form-item label="Display Name" prop="displayName" required>
           <el-col :span="12">
             <el-input
-              v-model="form.lastName"
+              v-model="form.displayName"
               autocomplete="off"
               placeholder="Please input"
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="User email " prop="email" required>
+        <el-form-item label="Type" prop="type" required>
           <el-col :span="12">
             <el-input
-              v-model="form.email"
+              v-model="form.type"
               autocomplete="off"
               placeholder="Please input"
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="Password" prop="password" required>
+        <el-form-item label="Version " prop="version" required>
           <el-col :span="12">
             <el-input
-              v-model="form.password"
+              v-model="form.version"
               autocomplete="off"
-              placeholder="Auto generated password"
+              placeholder="Please input"
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="Activity time" required>
-          <el-col :span="11">
-            <el-form-item prop="date1">
-              <el-date-picker
-                v-model="form.date1"
-                type="date"
-                label="Pick a date"
-                placeholder="Pick a date"
-                style="width: 100%"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col class="text-center" :span="2">
-            <span class="text-gray-500">-</span>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item prop="date2">
-              <el-time-picker
-                v-model="form.date2"
-                label="Pick a time"
-                placeholder="Pick a time"
-                style="width: 100%"
-              />
-            </el-form-item>
-          </el-col>
+        <el-space fill>
+          <el-alert type="info" show-icon :closable="false">
+            <p>
+              "From Template" value specifies to clone a flow template or not.
+            </p>
+          </el-alert>
+          <el-form-item label="From Template" prop="fromTemplate">
+            <el-switch v-model="form.fromTemplate" />
+          </el-form-item>
+        </el-space>
+        <el-form-item v-if="form.fromTemplate" label="Flow Template" prop="flowId">
+          <el-select v-model="form.flowId" placeholder="Activity zone">
+            <el-option label="Zone one" value="shanghai" />
+            <el-option label="Zone two" value="beijing" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="Permission Level" prop="permissionLevel">
-          <el-col :span="12">
-            <el-select v-model="form.permissionLevel">
-              <el-option
-                v-for="item in permission"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                allow-create
-                default-first-option
-                :reserve-keyword="false"
-                placeholder="Choose permission level"
-              >
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-form-item>
+        <el-space fill>
+          <el-alert type="info" show-icon :closable="false">
+            <p>
+              "Description" value has the specific instructions for device in
+              order to follow.
+            </p>
+          </el-alert>
+          <el-form-item label="Description" prop="Description">
+            <el-col :span="12">
+              <el-input v-model="form.description" type="textarea" />
+            </el-col>
+          </el-form-item>
+        </el-space>
       </el-form>
     </div>
     <template #footer>
@@ -119,109 +107,68 @@
   </el-dialog> -->
 </template>
 <script >
-import { userService } from "../../services/user.service";
+import { deviceService } from "../../services/device.service";
 import { ElLoading, ElMessage } from "element-plus";
 
 export default {
   props: {
     visible: {
       type: Boolean,
-      default: false,
+      required: true,
     },
   },
   data() {
     return {
       form: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        birthday: "",
-        date2: "",
-        permissionLevel: null,
+        name: "",
+        displayName: "",
+        version: "",
+        description: "",
+        type: "",
+        fromTemplate: false,
+        flowId : null,
       },
-      dialogFormVisible: false,
+      isVisible: false,
       wrapper: document.body,
-      permission: [
-        {
-          value: 1,
-          label: "Surfer",
-        },
-        {
-          value: 32768,
-          label: "Member",
-        },
-        {
-          value: 1073741824,
-          label: "Master",
-        },
-      ],
       rules: {
-        firstName: [
+        name: [
           {
             required: true,
-            message: "Please input user first name",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 20,
-            message: "Length should be 3 to 5",
+            message: "Please input device name",
             trigger: "blur",
           },
         ],
-        lastName: [
+        displayName: [
           {
             required: true,
-            message: "Please input user last name",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 20,
-            message: "Length should be 3 to 20",
+            message: "Please input device display name",
             trigger: "blur",
           },
         ],
-        email: [
+        version: [
           {
             required: true,
-            message: "Please input email address",
+            message: "Please input version",
             trigger: "blur",
-          },
-          {
-            type: "email",
-            message: "Please input correct email address",
-            trigger: ["blur", "change"],
           },
         ],
       },
     };
   },
-  components: {},
+  mounted() {},
   watch: {
-    "form.firstName": {
-      handler: function () {
-        this.form.password = Math.random().toString(36).slice(2).toString();
-      },
-      immediate: true,
-    },
-    visible: {
-      handler: function (o, n) {
-        this.dialogFormVisible = n;
-        console.log(o);
-        console.log(n);
-      },
+    visible: function (n, o) {
+      this.isVisible = n;
+      console.log("Prop changed: ", n, " | was: ", o);
     },
   },
-  computed: {},
   methods: {
     resetForm() {
       this.$refs["ruleForm"].resetFields();
-      console.log(this.$refs["ruleForm"]);
     },
     handleCancelOrClose() {
       this.resetForm();
+      this.isVisible = false;
       this.$emit("onClose");
     },
     submitForm() {
@@ -232,13 +179,13 @@ export default {
       });
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          userService
+          deviceService
             .create(this.form)
             .then(() => {
               this.loading.close();
               this.handleCancelOrClose();
               ElMessage({
-                message: "New user created",
+                message: "New device created",
                 type: "success",
                 showClose: true,
               });
@@ -255,7 +202,7 @@ export default {
               });
             });
         } else {
-          console.log("error submit!!");
+          this.loading.close();
           return false;
         }
       });
@@ -264,10 +211,15 @@ export default {
 };
 </script>
 <style>
-.title {
+#title {
   margin: 5%;
   display: flex;
   justify-content: center;
+  font-size: 14px;
+}
+.el-space {
+  display: flex;
+  vertical-align: top;
 }
 .el-button--text {
   margin-right: 15px;
@@ -280,5 +232,8 @@ export default {
 }
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+.el-select-v2__placeholder {
+  display: flex;
 }
 </style>

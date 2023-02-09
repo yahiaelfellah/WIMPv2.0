@@ -4,7 +4,19 @@
       <el-card class="box-card container">
         <template #header>
           <div class="card-header">
+            <el-button
+              color="#7325ef"
+              plain
+              round
+              @click="() => (dialogFormVisible = true)"
+              ><el-icon><Plus /></el-icon> Add
+            </el-button>
             <span class="card-title"> Click on device card for more infos</span>
+            <DeviceForm
+              :visible="dialogFormVisible"
+              @close="dialogFormVisible = false"
+              @refresh="getData()"
+            />
           </div>
         </template>
         <el-scrollbar v-if="!isEmpty">
@@ -58,9 +70,7 @@
                       <el-button type="primary" plain>Show flow</el-button>
                     </div> -->
                     <div class="card-status">
-                      <el-button type="danger" link style="padding: 1%"
-                        >Delete</el-button
-                      >
+                        <span class="status" :class="{ 'online':isOnline} "></span>
                     </div>
                   </el-card>
                   <DeviceInfo
@@ -82,11 +92,14 @@
 import { deviceService } from "../../services/device.service";
 import DeviceInfo from "./AdminDeviceInfo.vue";
 import { Watch } from "@element-plus/icons-vue";
+import DeviceForm from "./AdminDeviceForm.vue";
+
 
 export default {
   components: {
     // Watch,
     DeviceInfo,
+    DeviceForm,
   },
   computed: {
     isEmpty() {
@@ -103,14 +116,18 @@ export default {
         }, 1000);
       });
     },
+    getDeviceStatus(){
+
+    },
     isWatch(type) {
       return type === "watch";
     },
+
     getSource(index) {
       if (index === 0) {
         return "http://127.0.0.1:8000/red/#flow/43cfa3f5.540a8c";
       }
-      if (index === 1) {
+      else {
         return "http://127.0.0.1:8000/red/#flow/940cf029.f22d9";
       }
     },
@@ -124,17 +141,15 @@ export default {
     return {
       devices: [],
       loading: true,
+      dialogFormVisible: false,
       Watch,
       index: 0,
-      srcs : [
+      isOnline : true,
+      srcs: [
         "http://127.0.0.1:8000/red/#flow/43cfa3f5.540a8c",
-        "http://127.0.0.1:8000/red/#flow/940cf029.f22d9"
-
+        "http://127.0.0.1:8000/red/#flow/940cf029.f22d9",
       ],
-      infoVisibles : [
-        false,
-        false,
-      ]
+      infoVisibles: [false, false],
     };
   },
 };
@@ -145,10 +160,10 @@ export default {
   flex-direction: row;
 }
 .card-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
 }
 .el-card__header {
   padding: calc(var(--el-card-padding) - 2px) var(--el-card-padding);
@@ -201,7 +216,7 @@ export default {
   font-weight: 500;
   font-size: 14px;
   font-style: italic;
-  margin-top: 0.4%
+  margin-top: 0.4%;
 }
 .card-icon {
   width: 50px;
@@ -230,4 +245,48 @@ export default {
     width: 90%;
   }
 }
+.status {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 10px;
+}
+.status.online, .status.online:before {
+  background: #72ff7d;
+}
+.status.offline, .status.offline:before {
+  background: #ff4242;
+}
+.status.invisible, .status.invisible:before {
+  background: #42e5ff;
+}
+.status.idle, .status.idle:before {
+  background: #ffda72;
+}
+.status:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+
 </style>

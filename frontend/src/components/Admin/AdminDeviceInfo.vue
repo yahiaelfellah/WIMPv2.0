@@ -3,14 +3,16 @@
     v-model="isVisible"
     :before-close="handleClose"
     direction="rtl"
-    size="60%"
+    size="50%"
   >
+    <template #header>
+      <h2>Device Information</h2>
+    </template>
     <el-descriptions :title="device.name" :column="1">
       <el-descriptions-item label="Type">
         {{ device.type }}</el-descriptions-item
       >
-      <el-descriptions-item label="Status">
-      </el-descriptions-item>
+      <el-descriptions-item label="Status"> </el-descriptions-item>
       <el-descriptions-item label="Remarks">
         <el-tag size="small">School</el-tag>
       </el-descriptions-item>
@@ -22,17 +24,25 @@
     <el-space fill>
       <el-alert type="warning" show-icon>
         <p>
-          You must specify 'Departement' label on the individal inputs.<br />The
-          label will be created in the system so will be shown in the dropdown.
+          Make sure you click on "Deploy" to save the changes
         </p>
       </el-alert>
 
       <iframe :src="src" :id="uuid" class="myIfr" frameborder="0"></iframe>
+      <el-button
+        type="danger"
+        link
+        style="padding: 1%"
+        @click="deleteDevice(device._id)"
+        >Delete</el-button
+      >
     </el-space>
   </el-drawer>
 </template>
 <script>
 import { uuid } from "vue-uuid";
+import { ElMessage } from "element-plus";
+import { deviceService } from "../../services/device.service";
 
 export default {
   components: {},
@@ -87,6 +97,15 @@ export default {
   },
   unmounted() {
     console.log("Child unmounted()");
+  },
+  deleteDevice(id) {
+    deviceService.deleteDevice(id).then(() => {
+      ElMessage({
+        message: `device with ID = ${id} has been deleted`,
+        type: "success",
+        showClose: true,
+      });
+    });
   },
 };
 </script>

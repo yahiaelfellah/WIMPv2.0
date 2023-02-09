@@ -41,12 +41,12 @@
               highlight-current-row
               @current-change="handleCurrentChange"
             >
-              <el-table-column label="First name" prop="firstName" />
+              <el-table-column label="First name" prop="firstName"  style="min-width:300px"/>
 
-              <el-table-column label="Last name" prop="lastName" />
-              <el-table-column label="Email" prop="email" />
+              <el-table-column label="Last name" prop="lastName" style="min-width:300px" />
+              <el-table-column label="Email" prop="email" style="min-width:300px" />
 
-              <el-table-column label="Permisssion" prop="permissionLevel">
+              <el-table-column label="Permisssion" prop="permissionLevel" style="min-width:300px">
                 <template #default="scope">
                   <el-tag class="ml-2" type="danger">{{
                     userRole(scope.row.permissionLevel)
@@ -61,7 +61,7 @@
                   placeholder="Type to search"
                 />
               </template>
-              <el-table-column label="Operations">
+              <el-table-column label="Operations" fixed="right" width="200">
                 <template #default="scope">
                   <el-button
                     size="small"

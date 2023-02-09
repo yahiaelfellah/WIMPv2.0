@@ -6,7 +6,7 @@ const deviceSchema = new Schema({
     userId: String,
     name : String, 
     displayName : String,
-    version : Number,
+    version : String,
     type : String, 
     flowId : String,
     description : String, 
@@ -23,7 +23,7 @@ deviceSchema.set('toJSON',{
 })
 
 deviceSchema.findById = function(cb){
-    return this.model('Devices').find({deviceId:this.id},cb)
+    return this.model('Devices').find({id:this.id},cb)
 }
 
 const Device = mongoose.model('Devices',deviceSchema);
