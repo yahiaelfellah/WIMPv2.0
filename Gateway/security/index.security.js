@@ -15,7 +15,7 @@ const Surfer = config.permissionLevels.Surfer;
 const Member = config.permissionLevels.Member;
 
 /**
- * Setup Authentication procetion using Keycloak
+ * Setup Authentication protection using Keycloak
  * @param {*} app
  * @param {*} routes
  */
