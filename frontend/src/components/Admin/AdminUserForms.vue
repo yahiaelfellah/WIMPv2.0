@@ -180,6 +180,7 @@ export default {
       form: {
         firstName: "",
         lastName: "",
+        userName : "",
         email: "",
         password: Math.random().toString(36).slice(2).toString(),
         birthday: "",
@@ -257,6 +258,12 @@ export default {
       this.isVisible = n;
       console.log("Prop changed: ", n, " | was: ", o);
     },
+    "form.firstName" : {
+      handler:function(n,o) {
+        this.form.userName = n;
+        console.log("Prop changed: ", n, " | was: ", o);
+      }
+    },  
     "form.type": {
       handler: function () {
         this.permissionOptions = this.changePermissions();
@@ -311,6 +318,7 @@ export default {
               });
             });
         } else {
+          this.loading.close();
           return false;
         }
       });
