@@ -64,6 +64,11 @@ exports.patchFlowsById =(req,res) => {
         res.status(204).send({message : "updated successfully"});
     })
 }
+exports.patchStatusById = (req,res) => { 
+    IdentityModel.patchStatusById(req.params.userId,req.body.status).then((result) => {
+        res.status(204).send({message : "updated successfully"});
+    })
+}
 
 exports.patchDevicesById = (req,res) => {
     IdentityModel.patchIdentityDevices(req.params.userId,req.body.device).then((result) => {

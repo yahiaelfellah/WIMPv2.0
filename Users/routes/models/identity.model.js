@@ -14,6 +14,7 @@ const identiySchema = new Schema({
     password: String,
     permissionLevel: Number,
     departement : String,
+    status: Array, 
     devices:Array,
     flows: Array
 },{ timestamps: true });
@@ -92,6 +93,20 @@ exports.patchIdentityFlows = (id,flow) => {
         })
     })
 }
+
+exports.patchIdentityStatus = (id,status) => {
+    return new Promise((resolve,reject)=> {
+        Identity.findById(id,function(err,user){
+            if(err) reject(err);
+            user.status.push(status);
+            user.save(function(err,updates){
+                if(err) return reject(err);
+                resolve(updates);
+            })
+        })
+    })
+}
+
 
 exports.patchIdentityDevices = (id ,device) => {
     return new Promise((resolve,reject) => {

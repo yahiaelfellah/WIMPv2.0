@@ -38,7 +38,11 @@ exports.routesConfig = (app) => {
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.patchFlowsById
     ]);
-
+    app.patch('/users/:userId/status',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
+        IdentityProvider.patchStatusById
+    ])
     app.patch('/users/:userId/devices',[
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
