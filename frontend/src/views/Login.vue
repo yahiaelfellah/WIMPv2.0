@@ -1,57 +1,60 @@
 <template>
-  <div class="credentials-form">
-    <img class="logo" :src="require('../assets/logo.svg')" />
-    <h1 class="title">
-      <span>W</span><span>I</span><span>M</span><span class="highlight">P</span
-      ><span></span>
-    </h1>
-    <form @submit.prevent="login" id="login-form">
-      <div class="credential">
-        <p class="credential-title">Username :</p>
-        <input
-          v-model="values.username"
-          v-validate="'required|min:3|max:20'"
-          id="username"
-          name="username"
-          type="text"
-          placeholder="Username"
-          class="credential-input ov"
-        />
-        <div v-if="submitted && !!errors.username" class="alert alert-danger">
-          <div v-for="error in errors.username" :key="error">
-            {{ error }}
+  <div>
+    <div class="credentials-form">
+      <img class="logo" :src="require('../assets/logo.svg')" />
+      <h1 class="title">
+        <span>W</span><span>I</span><span>M</span
+        ><span class="highlight">P</span><span></span>
+      </h1>
+      <form @submit.prevent="login" id="login-form">
+        <div class="credential">
+          <p class="credential-title">Username :</p>
+          <input
+            v-model="values.username"
+            v-validate="'required|min:3|max:20'"
+            id="username"
+            name="username"
+            type="text"
+            placeholder="Username"
+            class="credential-input ov"
+          />
+          <div v-if="submitted && !!errors.username" class="alert alert-danger">
+            <div v-for="error in errors.username" :key="error">
+              {{ error }}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="credential">
-        <p class="credential-title">Password :</p>
-        <input
-          v-model="values.password"
-          name="password"
-          type="password"
-          placeholder="Password"
-          class="credential-input ov"
-        />
-        <div v-if="submitted && !!errors.password" class="alert alert-danger">
-          <div v-for="error in errors.password" :key="error">
-            {{ error }}
+        <div class="credential">
+          <p class="credential-title">Password :</p>
+          <input
+            v-model="values.password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            class="credential-input ov"
+          />
+          <div v-if="submitted && !!errors.password" class="alert alert-danger">
+            <div v-for="error in errors.password" :key="error">
+              {{ error }}
+            </div>
           </div>
         </div>
-      </div>
-      <input type="submit" value="Login" class="credential-submit pntr" />
-      <div class="redirect">
-        <p class="link pntr">Forgot password ?</p>
-        <p class="link pntr">Sign-up</p>
-      </div>
-    </form>
+        <input type="submit" value="Login" class="credential-submit pntr" />
+        <div class="redirect">
+          <p class="link pntr">Forgot password ?</p>
+          <p class="link pntr">Sign-up</p>
+        </div>
+      </form>
+    </div>
+    <footer class="fixed-footer">
+      <h3 class="footer-text">&copy; 2022 WIMP</h3>
+    </footer>
   </div>
-  <footer class="fixed-footer">
-    <h3 class="footer-text">&copy; 2022 WIMP</h3>
-  </footer>
 </template>
 <script>
 import { object, string } from "yup";
-import { ElNotification } from "element-plus";
+import { ElMessage } from "element-plus";
+
 import { ElLoading } from "element-plus";
 import { AuthenticationService } from "../services/auth.service";
 
@@ -121,12 +124,13 @@ export default {
               this.loading.close();
               this.message =
                 (error.response && error.response.data) || error.message;
-              ElNotification({
-                title: "Error",
+              ElMessage({
                 message: this.message,
                 type: "error",
+                showClose: true,
               });
-            });
+            }
+          );
         })
         .catch((err) => {
           this.loading.close();
@@ -144,17 +148,15 @@ body {
   background-color: #f5f5f5;
   overflow: hidden;
 }
+.title {
+  margin-bottom: 5%;
+  display: flex;
+  justify-content: center;
+}
 
 .logo {
   width: 150px;
   height: auto;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 20px;
-  margin-top: 0;
 }
 
 .credentials-form {

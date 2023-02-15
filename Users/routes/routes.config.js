@@ -1,9 +1,11 @@
 // const IdentityProvider = require('./controllers/identity.provider');
 //const config = require('../env.config');
 const IdentityProvider = require('./controllers/indentity.provider');
+const DepartementProvider = require('./controllers/departement.provider');
 const AuthorizationPermission = require('../security/authorization/authorization.permission');
 const config = require('../security/env.config');
 const Surfer = config.permissionLevels.Surfer;
+const Member = config.permissionLevels.Member;
 
 exports.routesConfig = (app) => {
     app.post('/users', [
@@ -11,6 +13,7 @@ exports.routesConfig = (app) => {
         IdentityProvider.insert
     ]);
     app.get('/users', [
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         IdentityProvider.list
     ]);
     app.get('/users/:userId', [
@@ -35,7 +38,11 @@ exports.routesConfig = (app) => {
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.patchFlowsById
     ]);
-
+    app.patch('/users/:userId/status',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
+        IdentityProvider.patchStatusById
+    ])
     app.patch('/users/:userId/devices',[
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
@@ -46,4 +53,18 @@ exports.routesConfig = (app) => {
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.removeById
     ]);
+    app.get('/users/:userId/meetings',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        AuthorizationPermission.sameUserCantDoThisAction,
+        
+    ])
+
+    app.get('/departement', [
+        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
+        DepartementProvider.list
+    ])
+    app.post('/departement',[
+        AuthorizationPermission.minimumPermissionLevelRequired(Member),
+        DepartementProvider.insert
+    ])
 };

@@ -1,7 +1,7 @@
 var http = require('http');
 var express = require("express");
 var RED = require("node-red");
-const { broker } =  require('./messaging/flows.messaging')
+const { consumer } = require("./messaging/flows.messaging");
 const permissions = require("./security/flow.permission")
 const flowRouter = require("./routes/route.config");
 const bodyParser = require('body-parser');
@@ -34,8 +34,12 @@ app.use(settings.httpAdminRoot, RED.httpAdmin);
 // Serve the http nodes UI from /api
 app.use(settings.httpNodeRoot,permissions.PermissionLevelRequired,RED.httpNode);
 
+/// Connection to Broker RabbitMQ
+consumer()
+
+
 server.listen(8000);
 // Connecting to the broker 
-broker.connect();
+//broker.connect();
 // Start the runtime
 RED.start();

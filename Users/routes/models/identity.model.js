@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const config = require('dotenv').config()
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env' )});
+
 mongoose.connect(process.env.mongoDbUrl,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
@@ -7,12 +9,15 @@ const identiySchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
+    birthday: Date,
     userName:String,
     password: String,
     permissionLevel: Number,
+    departement : String,
+    status: Array, 
     devices:Array,
     flows: Array
-});
+},{ timestamps: true });
 
 identiySchema.virtual('id').get(function () {
     return this._id.toHexString();
@@ -47,6 +52,7 @@ exports.findByUserName = (username) =>  {
 }
 
 exports.createIdentity = (userData) => {
+    console.log(userData);
     const user = new Identity(userData);
     return user.save();
 };
@@ -87,6 +93,20 @@ exports.patchIdentityFlows = (id,flow) => {
         })
     })
 }
+
+exports.patchIdentityStatus = (id,status) => {
+    return new Promise((resolve,reject)=> {
+        Identity.findById(id,function(err,user){
+            if(err) reject(err);
+            user.status.push(status);
+            user.save(function(err,updates){
+                if(err) return reject(err);
+                resolve(updates);
+            })
+        })
+    })
+}
+
 
 exports.patchIdentityDevices = (id ,device) => {
     return new Promise((resolve,reject) => {

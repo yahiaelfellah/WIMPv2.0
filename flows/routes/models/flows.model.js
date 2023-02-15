@@ -4,9 +4,10 @@ mongoose.connect(process.env.DB_URL,{ useUnifiedTopology: true });
 const Schema = mongoose.Schema;
 
 const flowSchema = new Schema({
+    userId: String,
     flowId : String,
-    flowData :Object
-
+    name : String,
+    data :Object
 }
 )
 
@@ -22,17 +23,17 @@ flowSchema.findById = function(cb){
     return this.model('flows').find({flowId:this.id},cb)
 }
 
-flowSchema.pre('save', function (next) {
-    var self = this;
-    Flow.find({flowData : self.flowData}, function (err, docs) {
-        if (!docs.length){
-            next();
-        }else{                
-            console.log('data exists: ',self.flowData);
-            next(new Error("data exists!"));
-        }
-    });
-}) ;
+// flowSchema.pre('save', function (next) {
+//     var self = this;
+//     Flow.find({flowData : self.flowData}, function (err, docs) {
+//         if (!docs.length){
+//             next();
+//         }else{                
+//             console.log('data exists: ',self.flowData);
+//             next(new Error("data exists!"));
+//         }
+//     });
+// }) ;
 
 const Flow = mongoose.model('flows',flowSchema);
 

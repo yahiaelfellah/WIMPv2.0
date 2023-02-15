@@ -15,7 +15,7 @@ const Surfer = config.permissionLevels.Surfer;
 const Member = config.permissionLevels.Member;
 
 /**
- * Setup Authentication procetion using Keycloak
+ * Setup Authentication protection using Keycloak
  * @param {*} app
  * @param {*} routes
  */
@@ -48,12 +48,13 @@ exports.setupAuthentication = (app, routes) => {
   app.use(
     session({
       secret: "XoR?qWvo:RYM,iX;2Tz_>{++gGIP16",
-      resave: false,
+      resave: true,
       saveUninitialized: true,
       store: memoryStore,
     })
   );
-  routes.forEach((route) => {
+  // app.use(keycloak.middleware());
+   routes.forEach((route) => {
     if (route.authenticationRequired) {
       app.use(
         route.url,

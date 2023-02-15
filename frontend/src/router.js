@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import { Role } from "@/helpers/roles";
 import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
-import Register from "@/views/Register.vue";
 import Admin from "@/views/Admin.vue";
+import Member from "@/views/Member.vue";
 import { AuthenticationService } from "./services/auth.service";
 //import jwt from "jsonwebtoken"
 const routes = [
@@ -11,18 +11,24 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: { authorize: [] },
+    meta: { authorize: [Role.Surfer] },
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
   },
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   component: Register,
+  //   meta: { authorize: [Role.Master] },
+  // },
   {
-    path: "/register",
-    name: "Register",
-    component: Register,
-    meta: { authorize: [Role.Master] },
+    path : "/member", 
+    name : "Member", 
+    component : Member, 
+    meta : { authorize : [Role.Member]}
   },
   {
     path: "/admin",
@@ -49,11 +55,11 @@ router.beforeEach((to, from, next) => {
           return next({ path: '/login', query: { returnUrl: to.path } });
       }
 
-      // check if route is restricted by role
+     /// check if route is restricted by role
       if (authorize.length && !authorize.includes(currentUser.roles)) {
           // role not authorised so redirect to home page
-          console.log(currentUser.roles)
-          if(currentUser.roles === Role.Master) return({ path: '/admin'})
+          if(currentUser.roles === Role.Master) return next({ path: '/admin'})
+          if(currentUser.roles === Role.Member) return next({ path: '/member'})
           return next({ path: '/' });
       }
   }
