@@ -2,7 +2,7 @@
   <div id="profile">
     <div class="common-layout">
       <el-header>
-        <Header />
+        <Header></Header>
       </el-header>
       <el-main>
         <article>
