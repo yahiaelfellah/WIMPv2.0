@@ -14,8 +14,10 @@
   "dependencies": {
     "amqplib": "^0.10.3",
     "express": "^4.18.2",
-    "node-red": "^1.2.3",
+    "node-cache": "^5.1.2",
+    "node-red": "^3.0.2",
     "node-red-node-wemo": "file:nodes/wemo",
+    "portfinder": "^1.0.32",
     "rxjs": "^7.6.0"
   }
 }
