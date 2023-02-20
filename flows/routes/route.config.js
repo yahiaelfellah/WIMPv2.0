@@ -15,11 +15,6 @@ exports.routesConfig = (app) => {
     app.put('/flow/:id', [
         flowProvider.putById
     ]);
-
-    // app.patch('/flow/:id', [ 
-    //     flowProvider.patchById
-    // ]);
-
     app.post('/flows/updates',[
         flowProvider.updateFlows
     ])
