@@ -71,6 +71,8 @@ exports.consumer = async () => {
                 case "patch_device": 
                     IdentityModel.patchIdentityDevices(rc.data.id, rc.data.body)
                     break;
+                case "patch_nodered_instance": 
+                    IdentityModel.patchIdentityNodeRedInstance(rc.data.id, rc.data.body)
             }
             chan.ack(msg)
         }, { noAck: false })

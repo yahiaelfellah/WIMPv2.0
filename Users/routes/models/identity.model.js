@@ -16,7 +16,7 @@ const identiySchema = new Schema({
     departement : String,
     status: Array, 
     devices:Array,
-    flows: Array
+    noderedInstance: Object
 },{ timestamps: true });
 
 identiySchema.virtual('id').get(function () {
@@ -47,8 +47,8 @@ exports.findById = (id) => {
         });
 };
 
-exports.findByUserName = (username) =>  {
-    return Identity.find({userName:username})
+exports.findByUserName = (name) =>  {
+    return Identity.find({userName:name})
 }
 
 exports.createIdentity = (userData) => {
@@ -72,20 +72,20 @@ exports.list = (perPage, page) => {
     });
 };
 
-exports.putIdentity = (id,identityData) => {
+exports.putIdentity = (id,data) => {
     return new Promise((resolve, reject) => {
-        Identity.findByIdAndUpdate(id,identityData,function (err,user) {
+        Identity.findByIdAndUpdate(id,data,function (err,user) {
             if (err) reject(err);
             resolve(user);
         });
     });
 };
 
-exports.patchIdentityFlows = (id,flow) => {
+exports.patchIdentityFlows = (id,data) => {
     return new Promise((resolve,reject)=> {
         Identity.findById(id,function(err,user){
             if(err) reject(err);
-            user.flows.push(flow);
+            user.flows.push(data);
             user.save(function(err,updates){
                 if(err) return reject(err);
                 resolve(updates);
@@ -94,11 +94,11 @@ exports.patchIdentityFlows = (id,flow) => {
     })
 }
 
-exports.patchIdentityStatus = (id,status) => {
+exports.patchIdentityStatus = (id,data) => {
     return new Promise((resolve,reject)=> {
         Identity.findById(id,function(err,user){
             if(err) reject(err);
-            user.status.push(status);
+            user.status.push(data);
             user.save(function(err,updates){
                 if(err) return reject(err);
                 resolve(updates);
@@ -108,11 +108,11 @@ exports.patchIdentityStatus = (id,status) => {
 }
 
 
-exports.patchIdentityDevices = (id ,device) => {
+exports.patchIdentityDevices = (id ,data) => {
     return new Promise((resolve,reject) => {
         Identity.findById(id, function(err,user) {
             if(err) reject(err);
-            user.devices.push(device);
+            user.noderedInstance = data;
             user.save(function(err,updates){
                 if(err) return reject(err);
                 resolve(updates);
@@ -122,13 +122,26 @@ exports.patchIdentityDevices = (id ,device) => {
 }
 
 
-exports.patchIdentity = (id, userData) => {
+exports.patchIdentityNodeRedInstance = (id, data) => { 
+    return new Promise((resolve, reject) => { 
+        Identity.findById(id, function(err,user) {
+            if(err) reject(err);
+            user.devices.push(data);
+            user.save(function(err,updates){
+                if(err) return reject(err);
+                resolve(updates);
+            })
+        })
+    })
+}
+
+exports.patchIdentity = (id, data) => {
     return new Promise((resolve, reject) => {
         Identity.findById(id, function (err, user) {
             if (err) reject(err);
             let actualPermisssion = user.permissionLevel;
-            for (let i in userData) {
-                user[i] = userData[i];
+            for (let i in data) {
+                user[i] = data[i];
             }
             user.permissionLevel = actualPermisssion;
             user.save(function (err, updatedUser) {
@@ -140,9 +153,9 @@ exports.patchIdentity = (id, userData) => {
 
 };
 
-exports.removeById = (userId) => {
+exports.removeById = (id) => {
     return new Promise((resolve, reject) => {
-        Identity.remove({_id: userId}, (err) => {
+        Identity.remove({_id: id}, (err) => {
             if (err) {
                 reject(err);
             } else {
