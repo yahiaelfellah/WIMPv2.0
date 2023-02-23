@@ -62,7 +62,7 @@ exports.consumer = async () => {
             //console.log(msg.content.toString())
             const rc = JSON.parse(msg.content.toString())
             switch(rc.action){
-                case "patch_flowId": 
+                case "patch_flow": 
                     DeivceModel.patchDeviceFlowId(rc.data.id, rc.data.body)
                     break;
             }            
