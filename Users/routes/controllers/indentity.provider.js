@@ -11,16 +11,13 @@ exports.insert = async (req, res) => {
   //req.body.permissionLevel = 1;
   IdentityModel.createIdentity(req.body).then((result) => {
     res.status(201).send({ id: result._id });
-  });
-  const result = await IdentityModel.createIdentity(req.body);
-  res.status(201).send({ id: result._id });
+      sender({
+        action: "create_nodered_instance",
+        data: {
+          id: result._id,
+        },
+      },"flow_queue");
 
-
-  sender({
-    action: "create_nodered_instance", 
-    body : { 
-      identity: result._id
-    }
   });
 };
 
