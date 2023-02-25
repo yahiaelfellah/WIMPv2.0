@@ -11,7 +11,7 @@
     </transition>
 
     <el-row :gutter="20">
-      <el-col :span="16">
+      <el-col :span="18">
         <transition name="el-fade-in-linear">
           <el-card v-show="show">
             <template #header>
@@ -24,6 +24,8 @@
                   @click="() => (dialogFormVisible = true)"
                   ><el-icon><Plus /></el-icon> Add
                 </el-button>
+                <span class="card-title"> Click on user for more infos</span>
+
                 <!-- <span class="card-title">
                 Click on device card for more infos</span
               > -->
@@ -80,9 +82,48 @@
           </el-card>
         </transition>
       </el-col>
-      <el-col :span="8">
-        <!-- <el-card>
-        <template #header>
+      <el-col :span="6">
+        <el-card>
+          <el-skeleton style="width: 240px" :loading="true" animated>
+
+          <template #template>
+        <!-- <el-skeleton-item variant="image" style="width: 240px; height: 240px" /> -->
+        <el-skeleton-item variant="circle" />
+
+        <div style="padding: 14px">
+          <el-skeleton-item variant="h3" style="width: 50%" />
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-items: space-between;
+              margin-top: 16px;
+              height: 16px;
+            "
+          >
+            <el-skeleton-item variant="text" style="margin-right: 16px" />
+            <el-skeleton-item variant="text" style="width: 30%" />
+          </div>
+        </div>
+      </template>
+      <template #default>
+        <el-card :body-style="{ padding: '0px', marginBottom: '1px' }">
+          <img
+            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            class="image"
+          />
+          <div style="padding: 14px">
+            <span>Delicious hamburger</span>
+            <div class="bottom card-header">
+              <div class="time">{{ currentDate }}</div>
+              <el-button text class="button">Operation button</el-button>
+            </div>
+          </div>
+        </el-card>
+      </template>
+    </el-skeleton>
+
+        <!-- <template #header>
           <div class="card-header">
             <p style="font-weight: bold">
               <el-icon><Cellphone /></el-icon> Devices
@@ -117,10 +158,23 @@
             active-text="Enable"
             inactive-text="Disable"
           />
-        </el-row>
-      </el-card> -->
+        </el-row> -->
+      </el-card>
       </el-col>
     </el-row>
+
+    <transition name="el-fade-in-linear"> 
+      <el-divider
+        v-show="show"
+        content-position="left"
+        style="font-weight: bold"
+      >
+        <el-icon><Cellphone /></el-icon> Flow Management</el-divider
+      >
+    </transition>
+    <transition name="el-fade-in-linear">
+      <FlowManager />
+    </transition>
     <transition name="el-fade-in-linear">
       <el-divider
         v-show="show"
@@ -153,6 +207,7 @@ import { userService } from "../../services/user.service";
 import { ElMessage } from "element-plus";
 import UserForm from "./AdminUserForms.vue";
 import DeviceManager from "./AdminDeviceManager.vue";
+import FlowManager from "./AdminFlowManager.vue";
 // import Map from "../MapboxComponent.vue";
 import { Role } from "../../helpers/roles";
 export default {
@@ -172,6 +227,7 @@ export default {
     Plus,
     UserForm,
     DeviceManager,
+    FlowManager
   },
 
   mounted() {
@@ -222,6 +278,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val;
+      console.log(this.currentRow);
     },
     getData() {
       userService.getAll().then((response) => {

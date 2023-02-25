@@ -114,6 +114,8 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 1000);
+      }).catch((ex) => {
+        console.info(ex);
       });
     },
     getDeviceStatus(){
